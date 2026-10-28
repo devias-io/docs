@@ -1,0 +1,38 @@
+---
+title: Import records
+sidebarTitle: Import
+description: How to import records into any object from a CSV file in the studio. A wizard reads the file, maps columns to fields and rehearses the whole import before anything is written. Covers existing rows, the 10 MB and 50,000-row limit, and why imports do not start workflows.
+icon: upload
+---
+
+Records can be imported into any object from a CSV file. The import wizard has three steps, **File**, **Columns** and **Check**, followed by the import itself. Nothing is written until the import is confirmed after **Check**.
+
+## Steps of an import
+
+1. Open the object and choose **Import** in the view's toolbar.
+2. **File.** Choose a CSV file, or paste its text. Devias detects the delimiter (comma, semicolon or tab) and whether the first row is a header. Both can be changed.
+3. **Columns.** Match each column of the file to a field. A column that does not match can be left out. If dates are written like `03/04/2026`, say whether the day or the month comes first, because a file cannot say.
+4. **Check.** Devias rehearses the whole import and reports what would happen: how many records it would add, update or skip, and which rows have problems. The problem rows can be downloaded as a CSV, fixed and tried again.
+5. Confirm the import. The records are written in batches.
+
+## Rows that already exist
+
+If the object has a field that must be unique, such as an email address, choose what to do with rows that match an existing record: skip them and only add new ones, or update the existing record.
+
+## Limits
+
+| Limit | Value |
+| --- | --- |
+| File size | 10 MB |
+| Rows | 50,000 |
+
+For larger data, split the file or use the [HTTP API](/reference/api/overview).
+
+## Imports and workflows
+
+Importing does not start workflows, because a data load is not a business event. A workflow starts for imported records only when **Imported records** is turned on in its trigger.
+
+## Related
+
+- [Records and views](/guides/studio/records): work with the imported records.
+- [Workflows](/guides/studio/workflows): automate what happens to new records.

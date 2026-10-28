@@ -1,0 +1,44 @@
+---
+title: Sidebar structure
+description: "How to arrange the studio sidebar with the structure setting of defineStudio. Lists every piece of the S builder (list, listItem, divider, objectList, view, page, navItems, objects, favorites), how objects, pages and views are named, and why S.navItems() must stay."
+icon: panel-left
+---
+
+By default the sidebar shows the nav items of the installed modules. The `structure` setting of `defineStudio` arranges it differently.
+
+```tsx
+structure: (S) =>
+  S.list().items([
+    S.page({ id: ids.pages.welcome, label: 'Welcome', component: WelcomePage }),
+    S.divider('Sales'),
+    S.objectList('deal', { view: ids.views.deal.pipeline }),
+    S.navItems(),
+  ]),
+```
+
+Objects are named by their API name, like `'deal'`. Pages and views are named by their id, the same uuids the modules declare them with.
+
+## Pieces of the S builder
+
+| Piece | What it adds |
+| --- | --- |
+| `S.list().items([...])` | A list of rows. This is the root. |
+| `S.listItem()` | A row of your own, with a label, an icon and children. |
+| `S.divider(label?)` | A separator, with an optional heading. |
+| `S.objectList(object, options)` | A row that opens an object, optionally on a given view. |
+| `S.view(view)` | A row that opens one view. |
+| `S.page(...)` | A row that opens a page, by path or with a component of your own. |
+| `S.navItems()` | Everything the workspace and its modules defined as nav items. |
+| `S.objects()` | A row for every object. |
+| `S.favorites()` | The person's favourites. |
+
+## Keep S.navItems()
+
+`S.navItems()` is what makes modules appear in the sidebar. Without it, an installed module adds its data and no row to reach it. It is placed where the module sections should go, with custom rows around it.
+
+Pinned rows (Home, Tasks, Documents, Workflows, Agents and Skills) are always shown at the top, whatever `structure` says.
+
+## Related
+
+- [Pages and commands](/guides/customize-studio/pages-commands): build the page a row points at.
+- [Views and navigation in a module](/guides/modules/views-layouts-navigation): how modules declare nav items.

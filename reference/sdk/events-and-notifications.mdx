@@ -1,0 +1,68 @@
+---
+title: SDK events and notifications
+sidebarTitle: Events and notifications
+description: "How to follow workspace changes with client.events.subscribe (event type, sequence, actor and occurredAt, resuming with after, connection status) and how to send and read notifications with client.notifications, including the to targets all, roles, users and me."
+icon: radio
+---
+
+`client.events` follows changes in a workspace as they happen, and `client.notifications` sends and reads messages for the people in it.
+
+## Subscribe to live events
+
+Every change in a workspace is written to a log, and `events.subscribe` listens to it.
+
+```ts
+const stop = client.events.subscribe((event) => {
+  console.log(event.type);
+});
+
+// later
+stop();
+```
+
+`subscribe` returns a function that stops listening. The connection recovers by itself if it drops.
+
+### Shape of an event
+
+Each event has a `type`, a `sequence` number that only increases, the `actor` that caused it and `occurredAt`. Common types:
+
+| Type | When |
+| --- | --- |
+| `record.created`, `record.updated`, `record.deleted` | A record changed. |
+| `metadata.changed` | The data model changed. |
+| `module.applied` | A module was installed or updated. |
+| `module.event` | A module received an event from an outside service. |
+| `workflow.run` | A workflow ran. |
+| `task.changed`, `document.changed` | A task or a document changed. |
+
+The [change feed](/reference/api/change-feed#event-types) lists every type.
+
+### Resume after a restart
+
+Store the `sequence` of the last event handled. After a restart, pass it as `after` to receive only later events.
+
+```ts
+client.events.subscribe(handle, { after: lastSequence });
+```
+
+`onStatus` reports the state of the connection: `connecting`, `open`, `reconnecting` or `closed`.
+
+## Notifications
+
+`notifications` is the signed-in person's own inbox, and the way to notify others.
+
+```ts
+await client.notifications.send({
+  title: 'Invoice paid',
+  to: { roles: ['admin'] },
+});
+
+const { items } = await client.notifications.list({ unread: true });
+```
+
+`to` is `all`, a list of `roles`, a list of `users`, or `me`. `markRead`, `markUnread`, `markAllRead` and `delete` manage received notifications.
+
+## Related
+
+- [Change feed over HTTP](/reference/api/change-feed): the same stream for any language.
+- [Workflows and tasks](/concepts/automation): act on events without code.

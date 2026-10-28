@@ -1,0 +1,47 @@
+---
+title: Agents and skills in a module
+sidebarTitle: Agents and skills
+description: "How a module ships agents and skills. Lists every property of defineAgent and defineSkill, what the tool list (actionIds) allows, the tools a module agent never gets, and how agents and skills are installed, updated and archived with the module."
+icon: bot
+---
+
+A module can ship its own **agents** and **skills**, declared with `defineAgent` and `defineSkill`. They are installed with the module, updated with it and archived when it is removed.
+
+## Declare an agent with defineAgent
+
+An agent is a label, instructions and a list of tools.
+
+| Property | What it is |
+| --- | --- |
+| `label`, `icon`, `description` | How people pick it. |
+| `instructions` | What it is for and how it should behave, in plain words. |
+| `actionIds` | The tools it may use. Each is an action's id. |
+| `skillIds` | The skills it may load. |
+| `starterPrompts` | Suggestions shown when a conversation starts. |
+
+The CRM's Sales agent is an example. Its instructions describe the pipeline and its manners ("look a person up before creating one"), and its tool list is short: it can read, create and update records and write comments, and it has no tool to delete anything or change the data model.
+
+The tool list is the agent's boundary. An agent only gets the tools listed, and a module's agent never gets tools for workflows, API keys, members, modules or other agents.
+
+Tools are the actions in `coreIds.actions` (Devias's own) and the actions your module declares. People can still set each tool to **Ask first** or **Runs freely** per agent in the studio.
+
+## Declare a skill with defineSkill
+
+A skill is a short how-to written in Markdown: a `label`, a `description` that says when to use it, and a `body`. An agent loads a skill only when a request calls for it, so a skill costs nothing until it is needed.
+
+```ts
+defineSkill({
+  id: ids.skills.close_deal,
+  label: 'Close out a deal',
+  description: 'When a deal is won or lost.',
+  body: '# Close out a deal\n\n1. Set the stage.\n2. Log a comment on why.',
+})
+```
+
+An agent has access to a skill when the skill's id is in the agent's `skillIds`.
+
+## Related
+
+- [Agents](/concepts/agents): the concept.
+- [Define an agent](/guides/agents/define-an-agent): define one in the studio.
+- [Publish a module](/guides/modules/publishing): package and release.

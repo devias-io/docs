@@ -1,0 +1,231 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "Devias",
+  "theme": "mint",
+  "description": "Documentation for Devias, an open-source platform that works as an operating system for a business: records, workflows, agents and permissions in a core, with installable modules.",
+  "colors": {
+    "primary": "#ececec",
+    "light": "#ececec",
+    "dark": "#262626"
+  },
+  "background": {
+    "color": {
+      "light": "#0b0b0b",
+      "dark": "#0b0b0b"
+    }
+  },
+  "appearance": {
+    "default": "dark",
+    "strict": true
+  },
+  "fonts": {
+    "family": "Inter"
+  },
+  "styling": {
+    "codeblocks": "dark"
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://devias.io"
+  },
+  "favicon": "/favicon.svg",
+  "icons": {
+    "library": "lucide"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/devias-io/devias",
+        "icon": "github"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get a demo",
+      "href": "https://cal.com/alexandru-comanescu/30min"
+    }
+  },
+  "api": {
+    "playground": {
+      "display": "simple"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Start",
+            "pages": [
+              "index",
+              "quickstart",
+              "start/use-with-ai",
+              "start/glossary"
+            ]
+          },
+          {
+            "group": "Concepts",
+            "pages": [
+              "concepts/architecture",
+              "concepts/data-model",
+              "concepts/views-and-layouts",
+              "concepts/modules",
+              "concepts/automation",
+              "concepts/agents",
+              "concepts/access"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              {
+                "group": "Use the studio",
+                "pages": [
+                  "guides/studio/navigate-the-studio",
+                  "guides/studio/records",
+                  "guides/studio/import",
+                  "guides/studio/documents",
+                  "guides/studio/tasks",
+                  "guides/studio/workflows",
+                  "guides/studio/agents",
+                  "guides/studio/modules",
+                  "guides/studio/settings"
+                ]
+              },
+              {
+                "group": "Build a module",
+                "pages": [
+                  "guides/modules/what-a-module-is",
+                  "guides/modules/first-module",
+                  "guides/modules/objects-and-fields",
+                  "guides/modules/views-layouts-navigation",
+                  "guides/modules/actions-and-server-code",
+                  "guides/modules/connections-and-events",
+                  "guides/modules/workflows",
+                  "guides/modules/agents-and-skills",
+                  "guides/modules/plan-and-apply",
+                  "guides/modules/publishing",
+                  "guides/modules/built-in-modules"
+                ]
+              },
+              {
+                "group": "Customize the studio",
+                "pages": [
+                  "guides/customize-studio/what-you-can-customize",
+                  "guides/customize-studio/structure",
+                  "guides/customize-studio/field-and-view-types",
+                  "guides/customize-studio/blocks",
+                  "guides/customize-studio/pages-commands",
+                  "guides/customize-studio/theming"
+                ]
+              },
+              {
+                "group": "Configure agents",
+                "pages": [
+                  "guides/agents/tools-and-approvals",
+                  "guides/agents/define-an-agent",
+                  "guides/agents/skills"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Operate",
+            "pages": [
+              "operate/deploy",
+              "operate/database",
+              "operate/environment",
+              "operate/contributing"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Reference",
+        "groups": [
+          {
+            "group": "SDK",
+            "pages": [
+              "reference/sdk/client",
+              "reference/sdk/records-and-queries",
+              "reference/sdk/metadata-and-modules",
+              "reference/sdk/events-and-notifications",
+              "reference/sdk/mock-and-testing"
+            ]
+          },
+          {
+            "group": "CLI",
+            "pages": [
+              "reference/cli/overview",
+              "reference/cli/plan",
+              "reference/cli/apply",
+              "reference/cli/dev",
+              "reference/cli/uninstall",
+              "reference/cli/id"
+            ]
+          },
+          {
+            "group": "HTTP API",
+            "pages": [
+              "reference/api/overview",
+              "reference/api/authentication",
+              "reference/api/errors",
+              "reference/api/querying",
+              "reference/api/change-feed",
+              "reference/api/module-routes"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "links": [
+      {
+        "header": "Devias",
+        "items": [
+          {
+            "label": "Quickstart",
+            "href": "/quickstart"
+          },
+          {
+            "label": "Build a module",
+            "href": "/guides/modules/what-a-module-is"
+          },
+          {
+            "label": "API reference",
+            "href": "/reference/api/overview"
+          }
+        ]
+      }
+    ],
+    "socials": {
+      "github": "https://github.com/devias-io/devias"
+    }
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
+  },
+  "markdown": {
+    "instructions": [
+      "The docs are served at https://docs.devias.io. Every path in these docs is relative to that root: /llms.txt is https://docs.devias.io/llms.txt.",
+      "Devias is an open-source platform that works as an operating system for a business: a core (records, views, workflows, agents, permissions) with installable modules.",
+      "Pages are typed by folder. concepts/ explains what things are, guides/ gives procedures, reference/ is exhaustive (SDK, CLI, HTTP API), operate/ covers hosting. Use /start/glossary for exact terms.",
+      "Every id in a module (module, object, field, view, action, workflow, step, connection, variable, event, policy) is a uuid. Generate them with `devias id <count>`. Never invent dotted or readable ids.",
+      "Run `devias plan` and read its output before `devias apply`. Apply only what the plan says.",
+      "The OpenAPI document, including the routes of the modules in the reference setup, is at /reference/api/openapi.json.",
+      "Devias is young and changes quickly. If a page and the source repository (github.com/devias-io/devias) disagree, the repository is right."
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+---
+title: Deploy
+description: "How to host Devias. Lists the requirements (Node.js 22, pnpm 10, Postgres 18, two secrets), the four deployment steps with the minimum environment, and requirements for secrets, addresses, a same-origin setup, live-update proxying and Sign in with Google."
+icon: server
+---
+
+A Devias installation has two parts: the **server** (the API) and the **studio** (a web app). Both are built from the repository.
+
+There is no official container image yet. These steps run Devias from the repository, which works on any machine that has Node.js.
+
+## Requirements
+
+- Node.js 22 or newer and pnpm 10 or newer.
+- A Postgres 18 database. See [Database](/operate/database).
+- Two secrets: a long random string for `BETTER_AUTH_SECRET`, and another of at least 16 characters for `ENCRYPTION_KEY`.
+
+## Deployment steps
+
+1. **Get the code and install.**
+
+   ```bash
+   git clone https://github.com/devias-io/devias.git
+   cd devias
+   pnpm install
+   ```
+
+2. **Set the environment.**
+
+   Create a `.env` file in the project root with the database and secrets. The minimum is:
+   ```bash
+   DATABASE_URL=postgres://user:password@host:5432/devias
+   BETTER_AUTH_SECRET=<a long random string>
+   ENCRYPTION_KEY=<another long random string>
+   BETTER_AUTH_URL=https://api.example.com
+   STUDIO_ORIGIN=https://app.example.com
+   MIGRATE_ON_BOOT=1
+   ```
+
+3. **Start the server.**
+
+   ```bash
+   pnpm --filter @devias/server-app start
+   ```
+   It listens on port 3000 (`PORT` changes it) and runs pending migrations first.
+
+4. **Build the studio.**
+
+   ```bash
+   VITE_API_URL=https://api.example.com pnpm --filter @devias/studio-app build
+   ```
+   Serve the `apps/studio/dist` folder from any static host, at the address given as `STUDIO_ORIGIN`.
+
+## Requirements and pitfalls
+
+- **Secrets:** without `BETTER_AUTH_SECRET` the server falls back to a development secret and warns. Never run that way in production. `ENCRYPTION_KEY` protects the credentials people give to modules. It must be kept safe and must not change, or stored connections become unreadable.
+- **Addresses:** `BETTER_AUTH_URL` is the server's public address. `STUDIO_ORIGIN` is the studio's. The server only accepts requests from that origin.
+- **One domain:** if the studio is served and `/api` is routed to the server on the same address, leave `VITE_API_URL` unset when building, and the studio uses the same origin.
+- **Live updates:** the studio listens to a long-lived event stream. A proxy in front must have response buffering turned off for it.
+- **Sign in with Google:** set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, and register `<BETTER_AUTH_URL>/api/auth/callback/google` as the redirect address.
+
+## Related
+
+- [Environment variables](/operate/environment): every setting.
+- [Database](/operate/database): embedded or Postgres, and migrations.
+- [Turn on agents](/quickstart#turn-on-agents): add an AI provider key.

@@ -1,0 +1,66 @@
+---
+title: SDK metadata and modules
+sidebarTitle: Metadata and modules
+description: "How to read a workspace schema with metadata.getSchema, change objects, fields, views, layouts, navigation and commands with list, get, create, update and delete, and plan, apply, uninstall and run actions of modules with the TypeScript SDK."
+icon: database
+---
+
+The SDK reads the shape of a workspace, changes it, and installs modules from code through `client.metadata` and `client.modules`.
+
+## Read the schema
+
+`metadata.getSchema()` returns everything the studio needs to draw a workspace in one call: its objects, fields, views, layouts, navigation, commands and installed modules.
+
+```ts
+const schema = await client.metadata.getSchema();
+schema.objects.map((object) => object.nameSingular); // ['person', 'company', 'deal']
+```
+
+Its `version` increases whenever the model changes, so it can be used as a cache key.
+
+## Change the model
+
+Objects, fields, views, layouts, navigation items and command items all have the same four methods: `list`, `get`, `create`, `update` and `delete`.
+
+```ts
+await client.metadata.fields.create({
+  objectId: person.id,
+  name: 'nickname',
+  label: 'Nickname',
+  type: 'text',
+});
+```
+
+What a module owns is protected: a workspace can add to it, and cannot edit or delete what the module declared.
+
+## Modules
+
+| Call | What it does |
+| --- | --- |
+| `modules.list()` | The installed modules. |
+| `modules.catalog()` | Every module the server can install. |
+| `modules.plan(manifest)` | What applying a manifest would change. |
+| `modules.apply(manifest)` | Apply it. Pass `allowDestructive` to allow deletions. |
+| `modules.uninstall(id)` | Remove a module and what it owns. |
+| `modules.runAction(id, name, input)` | Run one of a module's actions now. |
+
+```ts
+const plan = await client.modules.plan(manifest);
+
+if (!plan.hasDestructive && !plan.hasConflicts) {
+  await client.modules.apply(manifest);
+}
+```
+
+## Connections, variables and events
+
+A module with an outside service also has:
+
+- `modules.connections`: list, create, test and disconnect connections;
+- `modules.variables`: read and set its settings;
+- `modules.events(id)`: read the events its webhook received.
+
+## Related
+
+- [Plan and apply](/guides/modules/plan-and-apply): the same flow from the command line.
+- [Events and notifications](/reference/sdk/events-and-notifications): react to changes as they happen.

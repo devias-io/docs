@@ -1,0 +1,90 @@
+---
+title: Workflows in the studio
+sidebarTitle: Workflows
+description: "How to build and run a workflow in the studio without code. Covers the five triggers and their API kinds, step types, schedules in UTC, run and step statuses, retrying a failed run, running one on a record, workflows that ship with a module, and the no-self-triggering rule."
+icon: workflow
+---
+
+A **workflow** runs a list of steps whenever its trigger fires, such as creating a task when a deal is won. It is built in the studio without code. Each execution is a **run**, and every run is kept with the result of each step.
+
+<Frame caption="A workflow on the canvas: a trigger, then the steps that run one after another.">
+  <img src="/images/workflows-editor.webp" alt="The workflow editor with a trigger that fires when a deal is updated, two steps that create a task and send a notification, and the trigger's settings on the right" />
+</Frame>
+
+## Create a workflow
+
+1. Choose **Workflows** in the sidebar, then **New workflow**. A trigger can also be chosen from the list "Or start from what sets it off".
+2. Enter a title. Describe its purpose in the description so others know.
+3. Pick a trigger (see the table below).
+4. Add steps with the **+** button.
+5. Press **Create**. A workflow runs only while its switch is **On**.
+
+### Triggers
+
+| Studio name | API `kind` | Starts when |
+| --- | --- | --- |
+| When someone runs it | `manual` | A person runs it from a record's Actions menu. |
+| On a schedule | `schedule` | The clock matches, for example every weekday at 09:00 (UTC). |
+| When a record changes | `record_event` | A record is created, updated or deleted. It can be limited to certain fields changing, or to records that match a condition. |
+| When a task changes | `task_event` | A task is created, assigned, commented on or changes status. |
+| When a module sends an event | `module_event` | A module reports something, such as a payment received in Stripe. |
+
+### Steps
+
+| Studio name | API `kind` | Does |
+| --- | --- | --- |
+| Update the record | `action` | Updates the record that started the run. |
+| Create a record | `action` | Creates a record. |
+| Run an action | `action` | Runs any other action, including actions that modules add. |
+| If / else | `branch` | Chooses the next steps by a condition. |
+
+## Schedules
+
+A schedule needs no cron knowledge. Choose how often it runs: every few minutes, every few hours, every day, on certain days of the week, or once a month, then pick the time. Times are in UTC. **Custom (cron)** accepts a cron expression.
+
+A schedule can run once, or once for each record of an object that matches a condition, such as every open invoice past its due date. One scheduled run covers at most 500 records.
+
+## Runs and their statuses
+
+The Workflows page lists every workflow with its trigger, whether it is on, and how its last run went. It filters by **All**, **On**, **Off** and **Failing**, and charts runs over time. **Runs** on a workflow opens its run history. Opening a run shows what each step did.
+
+| Run status in the studio | API `status` |
+| --- | --- |
+| Queued: waiting for the server to take it | `pending` |
+| Running | `running` |
+| Succeeded | `succeeded` |
+| Failed | `failed` |
+
+A step can also be **Skipped**, for example when the record it was about was deleted. A step can be **Retrying**: it failed in a way that may pass, such as a service being busy, and the run says when it will try again. A failed run can be run again with **Retry**.
+
+## Run a workflow on a record
+
+A workflow whose trigger is "When someone runs it" appears in the **Actions** menu of a record of its object. Choosing it queues a run and returns immediately. The run is carried out in the background, so a slow run, such as a lookup in an outside service, does not hold the page.
+
+- While it works, the record's page shows **Running**, **Queued**, or **Will try again** (a step is waiting to be retried) with the workflow's name, to anyone who opens the record.
+- The workflow stays disabled in the menu until it is done, so it cannot be started twice on the same record.
+- When the run ends, the record updates by itself and a message says how it went. A run that did nothing says why.
+
+Runs started by a change or a schedule show the same mark on the records they are about.
+
+## Workflows that ship with a module
+
+Some modules bring workflows of their own. The Stripe module, for example, records a payment on its invoice when Stripe reports it. These show in the list with the module's name, and on the module's **Workflows** tab in **Settings → Modules**.
+
+- A workspace can switch a module's workflow on or off and look at its runs.
+- The trigger and steps belong to the module and stay as the module made them, so a module update can improve them.
+- To change one, open its **⋯** menu and choose **Make a copy**. The copy belongs to the workspace and starts switched off.
+- Uninstalling the module removes its workflows.
+
+## Rules
+
+- A run is saved as it goes. After a server restart a run continues from the step it was on.
+- A workflow acts as itself, not as a person. It can read and write records and run actions. It cannot change workspace settings.
+- Importing data does not start workflows. Turn on **Imported records** in a record trigger if it should.
+- Changes made by a workflow never start workflows, so a workflow cannot trigger itself in a loop.
+
+## Related
+
+- [Workflows and tasks](/concepts/automation): triggers, steps, limits and statuses.
+- [Workflows in a module](/guides/modules/workflows): ship a workflow, make an action safe to repeat.
+- [Use the assistant](/guides/studio/agents): ask an agent to build a workflow.

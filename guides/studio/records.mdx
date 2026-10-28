@@ -1,0 +1,77 @@
+---
+title: Records and views
+sidebarTitle: Records
+description: How to work with records in the studio. Covers the toolbar of a view (views, search, filters, sort, fields, group by, import, create), editing in place, the row menu, table, board and calendar views, creating a view, and the record page with its Actions menu.
+icon: table
+---
+
+A **record** is one row of an object, such as one person or one deal. The sidebar leads to an object, and the studio shows its records in a **view**. A view is a table, a board or a calendar.
+
+## Toolbar of a view
+
+Every view has the same toolbar.
+
+<Frame caption="The Open deals view of the deals table. The views, search, filter, sort and fields controls sit above the table.">
+  <img src="/images/records-table.webp" alt="A table of open deals with the view tabs Pipeline, All deals, Open deals, No next step, Won, Lost and Calendar, the search, Filters, Sort and Fields controls, and a chip showing the filter Stage is any of New, Screening, Meeting and Proposal" />
+</Frame>
+
+| Control | Effect |
+| --- | --- |
+| Views | Switch between the saved views of the object. |
+| Search | Find records by typing. |
+| Filters | Keep only the records that match a condition, such as stage is *Proposal*. |
+| Sort | Order the records by one or more fields. |
+| Fields | Show, hide and reorder columns. |
+| Group by | On a board, choose the field that makes the columns. |
+| Import | Bring in records from a CSV file. See [Import records](/guides/studio/import). |
+| Create | Add a record. The button names the object, such as **Create deal**. |
+
+## Edit and select records
+
+- Click a cell to edit it in place.
+- Tick the box at the start of a row to select it. A bar appears with **Delete** for the selected records.
+- Each row has a **⋯** menu at its end with the same choices as a record page's Actions menu: copy the record's link, run a workflow made to be run by hand on that record, or delete it. Deleting asks first.
+- While a workflow is working on a row, a spinner turns beside the record's name. A message appears when a run started from the menu ends.
+
+## Filter records
+
+1. Choose **Filters**.
+2. Pick a field, choose how it should match, and enter a value.
+3. Press **Apply**. Only matching records stay.
+
+Active filters show as chips under the toolbar. The **×** on a chip removes that filter, and **Clear** removes all of them.
+
+## Table, board and calendar views
+
+| View | Shows | Interaction |
+| --- | --- | --- |
+| Table | One record per row | Best for scanning and editing. |
+| Board | Cards in columns, grouped by a field such as a deal's stage | Dragging a card to another column changes that field. |
+| Calendar | Records placed on a date field, such as a close date | |
+
+To create a view:
+
+1. Open **Settings → Views** and choose the object.
+2. Add a view of the kind wanted.
+3. Set the filter, the sort, the fields, and the field to group by for a board.
+
+The view then appears in the object's view switcher for everyone in the workspace.
+
+## Record page
+
+Clicking a record opens its page. The page shows the record's fields, the records linked to it, its comments, an activity timeline, and any tasks about it. A change to a field saves as it is made.
+
+The **Actions** menu on a record page can:
+
+- copy a link to the record;
+- run workflows made to be run by hand;
+- run actions that modules add, such as recalculating an invoice;
+- delete the record.
+
+A workflow started from the menu runs in the background, so editing can continue. While a workflow is working on the record, a **Running…** mark shows at the top of the page, and that workflow stays disabled in the menu until it is done. A message appears when a run started from the menu ends, saying how it went.
+
+## Related
+
+- [Import records](/guides/studio/import): bring in records from a CSV file.
+- [Views, layouts and navigation](/concepts/views-and-layouts): how views and record pages are defined.
+- [Workflows](/guides/studio/workflows): create the workflows that appear in the Actions menu.

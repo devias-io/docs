@@ -1,0 +1,33 @@
+---
+title: Modules
+description: What a Devias module is, which modules are core, how installing works with a plan you review before applying, and how ids keep a module's data separate from a workspace's own data.
+icon: puzzle
+---
+
+A **module** is a package that adds one area of the business to a workspace. It can contain objects and fields, views and layouts, navigation, commands, actions, workflows, connections, variables, events, agents, skills and optionally server code. The CRM is a module. So are quotes, invoicing, expenses, products and inventory. A module can also connect to an outside service: Stripe takes payments, Resend sends email and Context.dev enriches people.
+
+## Core and installable modules
+
+A **core** module comes with every workspace. The studio itself is one: Home, Tasks, Documents, Workflows, Agents and Skills. Every other module is installed on request from **Settings → Modules**.
+
+## Install with a plan
+
+Installing a module is a two-step operation.
+
+1. Devias computes a **plan**: what the module would add or change in this workspace. Nothing is written.
+2. After review, the plan is **applied**.
+
+Uninstalling removes what the module owns and nothing else. The same two steps exist on the command line as `devias plan` and `devias apply`. See [Plan and apply](/guides/modules/plan-and-apply).
+
+## Ids and ownership
+
+Everything a module declares has an **id**, which is a uuid that never changes. Names and labels can change between versions and ids stay the same. Nothing reads meaning out of an id.
+
+Ids define ownership. A module owns what it declared. The workspace owns what people created. An update to a module therefore never touches a workspace's own data. Generate ids for a new module with `devias id <count>`; see [`devias id`](/reference/cli/id).
+
+## Related
+
+- [Install and connect modules](/guides/studio/modules): use modules in the studio.
+- [What a module is](/guides/modules/what-a-module-is): build one.
+- [Built-in modules](/guides/modules/built-in-modules): the modules that ship with Devias.
+- [Glossary](/start/glossary#id): definition of id.

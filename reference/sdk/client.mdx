@@ -1,0 +1,71 @@
+---
+title: TypeScript SDK
+sidebarTitle: Client
+description: "@devias/sdk is the typed TypeScript client the studio uses. How to create a client (baseUrl, workspaceId, apiKey), the areas it offers (records, metadata, modules, workflows, tasks, documents, comments, activity, notifications, events, ai) and how errors are thrown as DeviasApiError."
+icon: code
+---
+
+`@devias/sdk` is the client the studio itself uses. It calls the Devias HTTP API, listens for live changes and provides a query builder. It is written in TypeScript, so every method and record shape is typed.
+
+The SDK lives in the repository as the `@devias/sdk` workspace package. A package that uses it adds it as a `workspace:*` dependency.
+
+## Create a client
+
+```ts
+import { createClient } from '@devias/sdk';
+
+const client = createClient({
+  baseUrl: 'http://localhost:3000',
+  workspaceId: 'your-workspace-id',
+  apiKey: process.env.DEVIAS_API_KEY,
+});
+```
+
+| Option | What it is |
+| --- | --- |
+| `baseUrl` | Where the Devias server runs. |
+| `workspaceId` | The workspace every call is about. Copy it from **Settings → General**. |
+| `apiKey` | Sent with each request. In a browser, leave it out and the signed-in session cookie is used instead. |
+
+An API key is created in **Settings → API keys**. A key made there can read records. See [Authentication](/reference/api/authentication).
+
+`createWorkspaceApi` with only a `baseUrl` lists the workspaces a person can open, and creates one.
+
+## Areas of the client
+
+Everything hangs off one object, grouped by area.
+
+| Area | What you do with it |
+| --- | --- |
+| `records` | List, get, create, update, delete, upsert and look up records. |
+| `metadata` | Read the schema, and manage objects, fields, views, layouts and navigation. |
+| `modules` | List, plan, apply and uninstall modules, run their actions, manage connections. |
+| `workflows` | Create, run and inspect workflows and their runs. |
+| `tasks`, `documents` | The work and the pages of the workspace. |
+| `comments`, `activity` | A record's comments and history. |
+| `notifications` | Read the signed-in person's notifications, and notify others. |
+| `events` | Subscribe to live changes. |
+| `ai` | Conversations with agents. |
+
+## Errors
+
+Every failure is thrown as a `DeviasApiError`, with a `status`, a `code` such as `NOT_FOUND` or `VALIDATION`, a `message`, and sometimes `details`.
+
+```ts
+try {
+  await client.records.get('person', '01a17356-5c6a-71ce-8397-1fa843605aae');
+} catch (error) {
+  if (error instanceof DeviasApiError && error.code === 'NOT_FOUND') {
+    // handle it
+  }
+}
+```
+
+See [Errors](/reference/api/errors) for every code.
+
+## Related
+
+- [Records and queries](/reference/sdk/records-and-queries): read and write data.
+- [Metadata and modules](/reference/sdk/metadata-and-modules): the schema and module installation.
+- [Events and notifications](/reference/sdk/events-and-notifications): live changes.
+- [Mock backend](/reference/sdk/mock-and-testing): work without a server.

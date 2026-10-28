@@ -1,0 +1,24 @@
+---
+title: devias dev
+description: "devias dev applies the manifest once, then watches the manifest folder and applies each change on save. It never applies a change that deletes data and never asks questions. Use devias apply --allow-destructive for deletions."
+icon: refresh-cw
+---
+
+`devias dev` watches a module's folder and re-applies the manifest on every save.
+
+```bash
+devias dev -w <workspaceId> -m ./src/manifest/index.ts -k $DEVIAS_API_KEY
+```
+
+It applies the manifest once, then watches the manifest's folder. On each save it reads the manifest again and applies the change, printing a line with the time.
+
+## Only safe changes
+
+`dev` never applies a change that deletes data and never asks questions. If an edit would delete something, it reports that and waits. `devias apply --allow-destructive` applies it.
+
+The studio in development already applies safe changes to installed modules on start-up. `devias dev` applies changes the moment they are saved, against any server.
+
+## Related
+
+- [Create a first module](/guides/modules/first-module): a procedure that can use it.
+- [devias apply](/reference/cli/apply): apply once.

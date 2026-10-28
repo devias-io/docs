@@ -1,0 +1,75 @@
+---
+title: Data model
+description: How Devias stores business data. A workspace holds objects, an object has fields, and the rows of an object are records. Lists every built-in field type by API name with what it can do, how relations work, and who owns objects and fields.
+icon: database
+---
+
+The Devias data model has four levels: a **workspace** holds **objects**, an object has **fields**, and the rows of an object are **records**. Objects and fields are stored as data, not as code, so a change to them takes effect everywhere without a rebuild.
+
+## Levels of the data model
+
+| Level | Definition | Example |
+| --- | --- | --- |
+| Workspace | One company's space: its data, members, modules and settings. A person can belong to several workspaces. | Acme |
+| Object | A kind of thing the workspace keeps track of. | Person, Company, Deal |
+| Field | One piece of information on an object. Has a `type`. | Email (`email`), Amount (`money`) |
+| Record | One row of an object. | Ada Lovelace, a record of Person |
+
+```text
+Workspace
+└── Object: Person
+    ├── Field: First name  (text)
+    ├── Field: Email       (email)
+    ├── Field: Company     (relation → Company)
+    └── Records: Ada, Grace, …
+```
+
+An object has API names (`name`, `nameSingular`, `namePlural`), which code uses and people never read, and labels (`labelSingular`, `labelPlural`), which people read. See [Names, labels and titles](/start/glossary#names-labels-and-titles).
+
+## Change the model in Settings
+
+A field added under **Settings → Data model** appears in tables, forms, record pages, the HTTP API and the data an agent can read. No rebuild or deploy is needed. The same change can be made from code with a module manifest: see [Objects and fields in a module](/guides/modules/objects-and-fields).
+
+## Built-in field types
+
+The `type` of a field is one of these values. The last four columns say what the studio and the query API can do with a field of that type.
+
+| `type` | Holds | Sort | Group by | Search | Sum |
+| --- | --- | --- | --- | --- | --- |
+| `text` | Short text | yes | no | yes | no |
+| `rich_text` | Formatted text | no | no | no | no |
+| `number` | A number | yes | no | no | yes |
+| `money` | An amount of money | yes | no | no | yes |
+| `currency` | A currency code | yes | no | no | no |
+| `boolean` | Yes or no | yes | yes | no | no |
+| `date` | A calendar date | yes | no | no | no |
+| `date_time` | A moment in time | yes | no | no | no |
+| `select` | One choice from a fixed list | yes | yes | no | no |
+| `multi_select` | Several choices from a fixed list | no | no | no | no |
+| `email` | An email address | yes | no | yes | no |
+| `phone` | A phone number | yes | no | yes | no |
+| `url` | A web address | yes | no | yes | no |
+| `relation` | A link to a record of another object | no | no | no | no |
+| `member` | A person in the workspace | no | no | no | no |
+| `json` | Any JSON value, kept as it is | no | no | no | no |
+
+A module can register more types. A type the engine does not know is treated as opaque JSON, and the studio draws it with a fallback.
+
+## Relations between objects
+
+A `relation` field points at a record of another object, such as the company of a deal. Relations connect records across objects and across modules. They are what lets a company's page list its people and deals.
+
+## Ownership of objects and fields
+
+- Objects and fields created in Settings belong to the workspace.
+- Objects and fields shipped by a module belong to that module, and the module maintains them.
+- A workspace can add its own fields to an object that a module owns. An update to the module never touches those fields.
+
+Ownership is tracked by [id](/start/glossary#id), not by name.
+
+## Related
+
+- [Views, layouts and navigation](/concepts/views-and-layouts): how the records of an object are listed and how a record page is arranged.
+- [Modules](/concepts/modules): where most objects come from.
+- [Objects and fields in a module](/guides/modules/objects-and-fields): declare them in a manifest.
+- [Glossary](/start/glossary): exact definitions of every term.

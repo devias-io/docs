@@ -1,0 +1,48 @@
+---
+title: Settings
+description: What each page under Settings does in the Devias studio. Lists every Settings page by group (Account, Workspace, Data, Developer), and explains inviting members and roles, shaping the data model, and creating and revoking API keys.
+icon: settings
+---
+
+**Settings** is at the bottom of the sidebar. Its pages are grouped by purpose.
+
+## Settings pages
+
+| Group | Page | Purpose |
+| --- | --- | --- |
+| Account | Profile | The person's name and account details. |
+| | Appearance | Light or dark theme, for this browser. |
+| | Integrations | The person's own connections to services such as Google. |
+| Workspace | General | The workspace's name, address and ID. The ID is what a script or the CLI asks for. |
+| | Members | Invite people and set their roles. |
+| | Modules | Install, update and connect modules. |
+| | Navigation | Rename, hide and rearrange the sidebar. |
+| | AI | Whether the assistant is set up, which model it uses, and how much has been used. |
+| Data | Data model | Objects and fields. |
+| | Views | The views of each object. |
+| Developer | API keys | Keys for scripts and other services. |
+| | Diagnostics | Details for debugging the studio's setup. |
+
+## Invite members
+
+1. Open **Settings → Members**.
+2. Enter an email address, choose a role and invite. The person receives an invitation to join the workspace.
+
+Roles are `member`, `admin` and `owner`. Only admins and owners can change roles. See [Access and permissions](/concepts/access).
+
+## Shape the data model
+
+**Data model** adds objects and fields, including fields on an object a module shipped. A change takes effect at once in tables, forms, record pages, the API and what agents can see. See [Data model](/concepts/data-model).
+
+## Create an API key
+
+1. Open **Settings → API keys** and create a key.
+2. Choose when it expires.
+3. Copy the key. It is shown once.
+
+A key can be revoked here at any time. A key created in the studio can read records. A key with more permissions is created through the API with a `permissions` map. See [Authentication](/reference/api/authentication).
+
+## Related
+
+- [Access and permissions](/concepts/access): what each role can do.
+- [Install and connect modules](/guides/studio/modules): the Modules page.

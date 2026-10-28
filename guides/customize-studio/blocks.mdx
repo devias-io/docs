@@ -1,0 +1,48 @@
+---
+title: Blocks
+description: "How a module adds a block, a React component that Devias places on a screen. Lists the five surfaces (home, record, dialog, panel, approval), the defineBlockComponent properties, why a block is also declared in the manifest with defineBlock, and the requires property."
+icon: layout-grid
+---
+
+A **block** is a React component that Devias can place on a screen. A module uses blocks to add its own card to Home or its own section to a record page without changing the studio.
+
+```tsx
+function Greeting() {
+  return (
+    <InsightCard icon="sparkles" title="Welcome">
+      <InsightText>Hello from my module.</InsightText>
+    </InsightCard>
+  );
+}
+
+export const greetingBlock = defineBlockComponent({
+  id: ids.blocks.greeting,
+  label: 'Welcome',
+  icon: 'sparkles',
+  surfaces: { home: { order: 10 } },
+  component: Greeting,
+})
+```
+
+## Surfaces of a block
+
+A block lists the surfaces it can appear on.
+
+| Surface | Where it shows |
+| --- | --- |
+| `home` | The Home page, as a card. `InsightCard` gives it the house style. |
+| `record` | A record page, placed by a layout or added automatically. |
+| `dialog` | Inside a dialog. |
+| `panel` | Docked beside the content, like the assistant. |
+| `approval` | In the assistant, in place of the default approval card for a module's tool. |
+
+## Declare the block in the manifest
+
+Every block has an id. The module's manifest declares it with `defineBlock` and lists its surfaces. The manifest side lets layouts refer to the block and lets agents see what exists before any React loads.
+
+A block can set `requires` to certain objects, so that it shows only in workspaces that have them, such as once the module that owns them is installed.
+
+## Related
+
+- [Views and navigation in a module](/guides/modules/views-layouts-navigation): put a block on a record page.
+- [Pages and commands](/guides/customize-studio/pages-commands): give a block a whole page.

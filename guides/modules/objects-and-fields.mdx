@@ -1,0 +1,67 @@
+---
+title: Objects and fields in a module
+sidebarTitle: Objects and fields
+description: "How a module declares objects and fields. Lists every property of defineObject and defineField, the built-in field types, how to declare a relation with its inverse label, and how to add fields to an object owned by another module."
+icon: database
+---
+
+An **object** is a kind of record, and a **field** is one piece of information on it. A manifest declares both with `defineObject` and `defineField`.
+
+## Declare an object with defineObject
+
+An object needs an id, API names, labels for people, and its fields.
+
+| Property | What it is |
+| --- | --- |
+| `id` | The object's uuid. It never changes. |
+| `nameSingular`, `namePlural` | What the API calls it: `project`, `projects`. |
+| `labelSingular`, `labelPlural` | What people read: "Project", "Projects". |
+| `primaryFieldId` | The field that names a record, such as a person's name. |
+| `icon`, `description` | Shown in the sidebar and in settings. |
+
+The API name and the id are separate on purpose. An object can be renamed later without breaking anything, because everything else points at the id.
+
+## Declare a field with defineField
+
+| Property | What it is |
+| --- | --- |
+| `id`, `name`, `label` | The uuid, the API name and the label. |
+| `type` | One of the field types below. |
+| `isRequired` | A record can't be saved without it. |
+| `isUnique` | No two records may hold the same value, such as an email address. |
+| `defaultValue` | What a new record starts with. |
+| `settings` | Options for the type, such as the choices of a select. |
+| `position` | Where it sits among the object's fields. |
+
+The built-in types are `text`, `rich_text`, `number`, `money`, `currency`, `boolean`, `date`, `date_time`, `select`, `multi_select`, `email`, `phone`, `url`, `relation`, `member` and `json`. A module can add its own, as the CRM does with a star `rating`. See [Field and view types](/guides/customize-studio/field-and-view-types).
+
+## Declare a relation
+
+A `relation` field points at a record of another object. Declare it on the object that holds the link, such as a deal's company, and name the target object by its id.
+
+```ts
+defineField({
+  id: ids.fields.deal.company,
+  name: 'company',
+  label: 'Company',
+  type: 'relation',
+  settings: {
+    relationType: 'many_to_one',
+    targetObjectId: ids.objects.company,
+    inverseLabel: 'Deals',
+  },
+})
+```
+
+`many_to_one` means many deals can point at one company. `inverseLabel` is the heading of the list of deals on the company's page: relations are what let a record page show related records.
+
+## Add fields to someone else's object
+
+A module can add fields to an object that another module owns. List the field at the top level of your manifest, with the other object's id as its `objectId`. The field belongs to your module, and it is removed with it.
+
+Keep every id in one `ids.ts`, so the manifest, the server code and the tests refer to the same names. A small module can use a flat list, as in [Create a first module](/guides/modules/first-module). A larger module groups ids by kind, as the CRM does: `ids.objects.project`, `ids.fields.project.name`.
+
+## Related
+
+- [Views, layouts and navigation in a module](/guides/modules/views-layouts-navigation): show the objects.
+- [Data model](/concepts/data-model): the concept, with every field type and what it supports.

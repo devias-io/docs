@@ -1,0 +1,98 @@
+---
+title: Workflows in a module
+sidebarTitle: Workflows
+description: "How a module ships a workflow with defineWorkflow. Covers the five triggers, what a workspace can change on a shipped workflow, making an action safe to repeat with ctx.step, RetryableError with its backoff (30 seconds doubling to one hour, at most five retries), and runtime limits."
+icon: workflow
+---
+
+Work that should not make anyone wait, such as recording a payment when a service reports it, syncing every night or following up when a record changes, is a **workflow**. A module writes the work as an **action** and ships the workflow that sets it off with `defineWorkflow`.
+
+## Example: one action and one workflow
+
+The Stripe module adds a payment to an invoice when Stripe reports it paid. It has two parts:
+
+- The action `handle_checkout_event` does the work. It is server code, like any other [action](/guides/modules/actions-and-server-code).
+- A workflow in the manifest runs that action for each payment event Stripe sends.
+
+```ts
+defineWorkflow({
+  id: ids.workflows.apply_checkout_payments,
+  title: 'Apply Stripe checkout payments to invoices',
+  trigger: {
+    kind: 'module_event',
+    moduleId: ids.module,
+    types: ['checkout.session.completed', 'checkout.session.async_payment_succeeded'],
+  },
+  steps: [
+    {
+      id: ids.steps.handle_checkout_event,
+      kind: 'action',
+      actionId: ids.actions.handle_checkout_event,
+      input: { event: '{{event.payload}}' },
+    },
+  ],
+})
+```
+
+The workflow is added to the `workflows` of `defineModule`. `{{event.payload}}` passes the whole event to the action, as the service sent it. The workflow and each of its steps carry a uuid, like everything else a manifest declares.
+
+## Triggers
+
+A workflow in a module can start from any trigger a person can pick in the studio.
+
+| Trigger | Starts when |
+| --- | --- |
+| `module_event` | Your webhook delivers one of the module's [events](/guides/modules/connections-and-events). |
+| `schedule` | The clock matches a cron expression, read in UTC. It can run once, or once for each record that matches a condition. |
+| `record_event` | A record of an object is created, updated or deleted. |
+| `task_event` | A task is created, assigned, commented on or changes status. |
+| `manual` | A person runs it from a record's Actions menu. |
+
+Triggers name objects and fields by id, so a module refers to its own through `ids`. If a workflow names something that is not installed or declared, the install plan stops and says what is missing.
+
+## What a workspace can change on a shipped workflow
+
+A workflow that ships with a module shows up in **Workflows**, marked with the module's name, and on the module's own **Workflows** tab.
+
+- The module owns its title, trigger and steps. Updating the module updates them.
+- The workspace owns the switch. A workflow starts **On**, or **Off** if the manifest sets `enabled: false`. An update of the module never changes what the workspace chose.
+- A workspace cannot edit or delete it. **Make a copy** creates a workspace-owned copy that starts off.
+- Uninstalling the module removes its workflows, with their runs.
+
+## Make an action safe to repeat
+
+Every step runs at least once. If a server stops in the middle of a step, another server takes the run over and continues after the steps that finished, so that one step may run again. A retry runs it again too.
+
+An action must therefore be safe to run twice. The Stripe action does not add a payment it has already recorded, and it notifies the owners only once about money that arrived for an invoice that owed nothing.
+
+When a workflow runs an action, `ctx.step` says which step and which attempt this is:
+
+| Field | Value |
+| --- | --- |
+| `runId`, `stepId` | The run, and the step in it. |
+| `attempt`, `maxAttempts` | This attempt, and how many attempts the step gets in all. |
+| `key` | `<runId>:<stepId>`, the same on every attempt. Use it to recognise a repeat. |
+
+`ctx.step` is not set when a person or the API runs the action directly.
+
+## Retries
+
+A `RetryableError` marks a failure that may pass, such as a rate limit or a timeout. The step is tried again later: after 30 seconds the first time, doubling up to one hour, or after `retryAfterMs` when the error carries one. A step is retried at most five times.
+
+```ts
+throw new RetryableError('The service is busy', 60_000);
+```
+
+Any other error fails the run at once, and the run states why. A failed run stays in the workflow's history, where **Retry** runs the workflow again on the same record or event.
+
+## Runtime behaviour
+
+- Runs go one at a time in a workspace, so a slow action delays other workflows there. Keep each action short. For a large sync, do one page of work per run and keep the position in `ctx.kv`.
+- A run is saved after every step, so it survives a restart.
+- Each event your webhook stores starts one run per workflow that listens for it, and the same event is never stored twice.
+
+## Related
+
+- [Workflows in the studio](/guides/studio/workflows): what users see and can change.
+- [Connections and events in a module](/guides/modules/connections-and-events): where workflows often start.
+- [Workflows and tasks](/concepts/automation): limits and statuses.

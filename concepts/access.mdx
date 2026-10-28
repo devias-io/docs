@@ -1,0 +1,37 @@
+---
+title: Access and permissions
+sidebarTitle: Access
+description: Who can do what in Devias. Every request from a person, API key, workflow, module or agent passes the same permission check in the server. Lists the three member roles, what an API key can do, and how workflows, modules and agents are limited.
+icon: shield
+---
+
+Every request to the Devias server passes one permission check. What differs is **who is asking**: a person, an API key, a workflow, a module's server code or an agent.
+
+## People
+
+Each member of a workspace has one role.
+
+| Role | Can |
+| --- | --- |
+| `owner` and `admin` | Everything: change the data model, manage members, modules, API keys, workflows and AI settings |
+| `member` | Read and write records, documents and tasks, run workflows and module actions, and connect their own accounts |
+
+An admin changes roles under **Settings → Members**.
+
+## API keys
+
+An API key is created under **Settings → API keys**, with an expiry chosen at creation. It carries its own list of permissions, such as "read and write records". A key created in the studio can read records; a key with more permissions is created through the API with a `permissions` map. A key is shown in full once, when it is created, and can be revoked at any time. Use a key for scripts and other services, and give it only what it needs. See [Authentication](/reference/api/authentication).
+
+## Workflows and modules
+
+Workflows and a module's server code act as themselves, not as a person. They can read and write records and run actions. They can never manage the workspace.
+
+## Agents
+
+An agent acts with the role of the person who asked, and its tool list limits it further. It can never do more than that person could. History records both the agent and the person. See [Agents](/concepts/agents).
+
+## Related
+
+- [Authentication](/reference/api/authentication): sessions and API keys over HTTP.
+- [Settings](/guides/studio/settings): invite people, set roles, create API keys.
+- [Tools and approvals](/guides/agents/tools-and-approvals): limit what an agent may do.

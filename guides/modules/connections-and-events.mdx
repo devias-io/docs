@@ -1,0 +1,76 @@
+---
+title: Connections and events in a module
+sidebarTitle: Connections and events
+description: "How a module connects to an outside service. Covers defineConnection (api_key and oauth2, workspace or personal), connection tests, defineVariable settings, and defineEvent with a webhook parse function that verifies signatures and returns events deduplicated by externalId."
+icon: plug
+---
+
+Many modules talk to a service such as Stripe, Resend or Google. Devias stores credentials safely, asks people to connect, and receives events. A module declares a **connection**, optional **variables** and the **events** it receives.
+
+## Declare a connection with defineConnection
+
+A connection is how a workspace or a person signs in to the service. There are two kinds.
+
+| Kind | For | Belongs to |
+| --- | --- | --- |
+| `api_key` | A key or token the user pastes in. You list the fields to ask for. | The workspace, by default |
+| `oauth2` | "Sign in with…". You give the authorize and token URLs and the scopes. | Each person, by default |
+
+```ts
+defineConnection({
+  id: ids.connections.default,
+  kind: 'api_key',
+  label: 'Stripe',
+  fields: [{ name: 'secret_key', label: 'Secret key', placeholder: 'sk_live_…' }],
+})
+```
+
+`visibility` is `workspace`, `user` or `both` and chooses who may make a connection. Credentials are encrypted at rest and shown back only as a masked hint. In server code, `ctx.connection()` returns the connection in use.
+
+A **connection test** in server code gives people an immediate "it works" or a clear error when they connect. If the service refuses the credentials, `ctx.reportAuthFailure()` makes Devias ask people to reconnect.
+
+## Declare a variable with defineVariable
+
+A variable is a setting the module's code reads, such as a region or an OAuth app's client id. `secret` keeps it write-only, `required` makes the module ask for it, and `defaultValue` gives it a value when nobody sets one. Admins set variables on the module's page in **Settings → Modules**.
+
+```ts
+defineVariable({
+  id: ids.variables.min_match_score,
+  label: 'Minimum match score',
+  description: 'How sure the service must be, from 0 to 100.',
+  defaultValue: '70',
+})
+```
+
+In server code, `ctx.variables[id]` is the value in effect: the workspace's own, else the default. A variable that nobody set and that has no default is absent.
+
+## Declare events with defineEvent
+
+An event is something the service reports, such as `invoice.paid`. Workflows can start from the declared events.
+
+1. **Declare the events.**
+
+   Give each event an id and its name as the service writes it:
+   ```ts
+   defineEvent({
+     id: ids.events.invoice_paid,
+     name: 'invoice.paid',
+     description: 'An invoice was paid.',
+   })
+   ```
+
+2. **Handle the webhook.**
+
+   In server code, add a `webhook` with a `parse` function. It verifies the delivery's signature using the connection and returns the events the delivery carries. Throw `WebhookRejected` for a bad signature or an unreadable body. Returning an empty array acknowledges the delivery with a success response and stores nothing.
+
+3. **Give the service the address.**
+
+   Each connection has its own webhook address, shown on the module's **Events** tab. `webhookHelp` in the manifest tells people where to paste it in the service.
+
+Devias stores every event once, even if the service sends it twice, provided the returned event carries the service's own id as `externalId`. It then announces the event to workflows that listen for it. A module can ship such a workflow itself, which is how the Stripe module records a payment when Stripe reports one.
+
+## Related
+
+- [Workflows in a module](/guides/modules/workflows): react to events in the background.
+- [Install and connect modules](/guides/studio/modules): what users see.
+- [Actions and server code](/guides/modules/actions-and-server-code): the handler context.

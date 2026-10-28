@@ -1,0 +1,56 @@
+---
+title: Publish a module
+sidebarTitle: Publishing
+description: "How to prepare a Devias module for sharing. Lists the identity properties (label, description, icon, logo limits, website), semantic versioning and engines, the package exports (manifest, server, studio), the experimental policy declaration, and a pre-release checklist."
+icon: package
+---
+
+A module is an ordinary npm package, so sharing one means preparing the package: identity, version and exports.
+
+## Identity properties
+
+| Property | What it is for |
+| --- | --- |
+| `label` | The name people read in **Settings → Modules**. |
+| `description` | One sentence under the name. |
+| `icon` | A line icon, shown when there is no logo. |
+| `logo` | An image in your package, such as `./logo.svg`. It can be `.svg`, `.png` or `.webp`, up to 256 KB, and must stay inside the package. |
+| `website` | Your site, or the service your module connects to. Only `http` and `https` links are accepted. |
+
+## Versions
+
+`version` is a semantic version, like `1.2.0`. Bump it when the manifest changes, so people can tell which version they have. Devias notices a changed manifest and shows the plan to apply it.
+
+You can also state which Devias versions you work with, with `engines: { devias: '>=0.1' }`. It is shown to people, but nothing enforces it yet.
+
+## What the package exports
+
+A package tells Devias which parts it has through its `exports`:
+
+```json
+"exports": {
+  "./manifest": "./src/manifest/index.ts",
+  "./server": "./src/server/index.ts",
+  "./studio": "./src/studio/index.ts"
+}
+```
+
+Exports a module does not have are left out. The studio and server packages are optional peer dependencies, so a manifest-only module stays light and the CLI can read it without loading React.
+
+## Policies (experimental)
+
+A **policy** is a module's default for what should wait for a person's review, such as "expenses over 500". It is declared with `definePolicy` and has a decision of `auto`, `review` or `deny`.
+
+Policies are experimental: they are stored and shown to the person installing the module, and nothing enforces them yet.
+
+## Pre-release checklist
+
+- Every declared item has a uuid, and none is reused from another module.
+- `devias plan` against a fresh workspace shows only creates.
+- The module installs cleanly after the modules it depends on, and uninstalls cleanly.
+
+## Related
+
+- [Built-in modules](/guides/modules/built-in-modules): the modules that ship with Devias, as examples.
+- [Customize the studio](/guides/customize-studio/what-you-can-customize): add screens of your own.
+- [Plan and apply](/guides/modules/plan-and-apply): preview and apply a manifest.

@@ -1,0 +1,82 @@
+---
+title: Use these docs with AI
+sidebarTitle: Use with AI
+description: "How an AI agent reads Devias documentation and acts on Devias. Machine-readable entry points (llms.txt, llms-full.txt, Markdown pages, MCP server, skill.md, OpenAPI), how pages are organised, rules for changing a workspace, and which page answers which task."
+icon: bot
+---
+
+These docs are written for AI agents first. Every page is plain Markdown, opens with a self-contained summary, and uses exact identifiers, values and limits. Agents can read them without a browser.
+
+## Machine-readable entry points
+
+The docs root is `https://docs.devias.io`, and these paths are relative to it: `/llms.txt` is `https://docs.devias.io/llms.txt`.
+
+| Path | Contents |
+| --- | --- |
+| `/llms.txt` | An index of every page, in navigation order, with its title and description. Start here. |
+| `/llms-full.txt` | The full text of every page in one file. |
+| `<page path>.md` | One page as Markdown. For example `/concepts/data-model.md`. |
+| `/mcp` | A hosted MCP server. Its tools search the docs, read pages and submit feedback on a page. |
+| `/skill.md` | A capability summary: what an agent can do with Devias, the inputs it needs, the constraints, and the main workflows. |
+| `/reference/api/openapi.json` | The OpenAPI 3.1 document of the HTTP API, including module routes. The complete list of routes. |
+
+Each page also has a menu that copies it as Markdown, opens it in Claude or ChatGPT, or installs the MCP server in Cursor or VS Code.
+
+The source code is the final authority. If a page and the source repository (`github.com/devias-io/devias`) disagree, the repository is right.
+
+## How the pages are organised
+
+The folder says what kind of page it is.
+
+| Folder | Kind | Use it to |
+| --- | --- | --- |
+| `start/` and the home page | Orientation | Learn what Devias is, run it, look up a term. |
+| `concepts/` | Explanation | Learn what a thing is, its parts and its rules. |
+| `guides/` | Procedure | Do a task: use the studio, build a module, customize the studio, configure agents. |
+| `reference/` | Exhaustive lookup | Find exact options: the SDK, the CLI, the HTTP API. |
+| `operate/` | Hosting | Deploy, configure the database and environment, contribute. |
+
+Every page follows the same conventions.
+
+- The first paragraph defines the subject and stands alone.
+- A heading names its subject, so a section can be read without the text before it.
+- Exact values (types, statuses, limits, defaults, error codes) are in tables.
+- Identifiers are in code font: `record_event`, `isRequired`, `devias plan`.
+- A final **Related** list links to the pages that continue the topic.
+
+## Rules when acting on Devias
+
+1. Every id in a module is a uuid. Generate ids with `devias id <count>`. Never write readable or dotted ids.
+2. Run `devias plan` and read its output before `devias apply`. Never pass `--allow-destructive` unless a deletion is intended.
+3. `devias plan` and `devias apply` need an API key with `{ "module": ["manage"] }`. A key created in the studio can only read records.
+4. Do not edit what a module owns. A workspace changes a module's items by adding its own fields or by copying a workflow. An edit of an owned item is refused as a `CONFLICT`.
+5. A workspace id is not a uuid. Copy it from **Settings → General**.
+6. Use the OpenAPI document for routes and schemas instead of guessing.
+7. An agent acts with the role of the person who asked. A tool set to Ask first waits for approval, and an agent must not try to route around it.
+
+## Find the page for a task
+
+| Task | Page |
+| --- | --- |
+| Run Devias locally | [Quickstart](/quickstart) |
+| Look up a term | [Glossary](/start/glossary) |
+| Understand the data model | [Data model](/concepts/data-model) |
+| Create a module | [Create a first module](/guides/modules/first-module) |
+| Declare objects and fields | [Objects and fields in a module](/guides/modules/objects-and-fields) |
+| Add an action with server code | [Actions and server code](/guides/modules/actions-and-server-code) |
+| Connect to an outside service | [Connections and events in a module](/guides/modules/connections-and-events) |
+| Ship a workflow, with retries | [Workflows in a module](/guides/modules/workflows) |
+| Preview and apply a manifest | [Plan and apply](/guides/modules/plan-and-apply) |
+| Call the HTTP API | [HTTP API](/reference/api/overview) |
+| Authenticate | [API authentication](/reference/api/authentication) |
+| Query records | [Querying records](/reference/api/querying) |
+| Follow changes | [Change feed](/reference/api/change-feed) |
+| Use the TypeScript client | [TypeScript SDK](/reference/sdk/client) |
+| Set up an agent and its tools | [Define an agent](/guides/agents/define-an-agent) |
+| Deploy to a server | [Deploy](/operate/deploy) |
+| Look up an environment variable | [Environment variables](/operate/environment) |
+
+## Related
+
+- [What Devias is](/): the home page.
+- [Architecture](/concepts/architecture): studio, server and modules.

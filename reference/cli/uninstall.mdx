@@ -1,0 +1,27 @@
+---
+title: devias uninstall
+description: "devias uninstall shows what would be removed and asks before doing anything. Records in the module objects are removed with them, so it is destructive: --allow-destructive is required for a module that owns data. It removes only what the module owns. Core studio modules cannot be uninstalled."
+icon: trash-2
+---
+
+`devias uninstall` removes a module and everything it owns from a workspace.
+
+```bash
+devias uninstall -w <workspaceId> -m ./src/manifest/index.ts
+```
+
+It shows what would be removed and asks **Uninstall?** before doing anything. Records stored in the module's objects are removed with them, so removing an object is a **destructive** change.
+
+| Flag | What it does |
+| --- | --- |
+| `-y, --yes` | Skip the question. |
+| `--allow-destructive` | Allow the deletions. Without it, a module that owns data is not removed. |
+
+It removes only what the module owns. Anything the workspace created, such as its own fields on the module's objects, is not part of the module's plan.
+
+Core parts of the studio cannot be uninstalled.
+
+## Related
+
+- [devias plan](/reference/cli/plan): preview first.
+- [Install and connect modules](/guides/studio/modules): uninstall from the studio instead.

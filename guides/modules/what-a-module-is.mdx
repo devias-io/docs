@@ -1,0 +1,46 @@
+---
+title: What a module is
+description: "A Devias module is an npm package that adds one area of the business. Lists the three parts (manifest, server code, studio code), the package layout and exports, which part is required, and how a module reaches a workspace."
+icon: puzzle
+---
+
+A **module** is an npm package that adds one area of the business to Devias: its data, its screens and its actions. The CRM is a module. So are invoicing, expenses and the Stripe connection.
+
+## Parts of a module
+
+| Part | What it adds | Where it lives |
+| --- | --- | --- |
+| Manifest | Objects, fields, views, layouts, sidebar items, commands, agents, skills and workflows. It is plain data. | `src/manifest` |
+| Server code | Actions, webhooks and connection checks. | `src/server` |
+| Studio code | Custom screens: blocks, pages and field types written in React. | `src/studio` |
+
+Only the manifest is required. The Expenses module is a manifest and nothing else.
+
+```text
+my-module/
+├── package.json
+└── src/
+    ├── manifest/    ← always: what the module is
+    ├── server/      ← optional: what it does
+    └── studio/      ← optional: what it looks like
+```
+
+The package says which parts it has through its `exports`: `./manifest`, `./server` and `./studio`.
+
+## How a module reaches a workspace
+
+1. The package is listed in `devias.config.ts`, so the studio and the server know about it.
+2. An admin installs it in a workspace from **Settings → Modules**, after reviewing a plan of what will change.
+3. From then on the studio shows its screens and the server runs its code.
+
+Everything a module declares carries a **uuid** that never changes. That is how Devias knows what the module owns, and how it updates the module later without touching anything the workspace created.
+
+<Note>
+  A module can build on another. Expenses, for example, needs the CRM installed first, because an expense points at a CRM company.
+</Note>
+
+## Related
+
+- [Create a first module](/guides/modules/first-module): a procedure with a complete manifest.
+- [Built-in modules](/guides/modules/built-in-modules): the modules that ship with Devias, as examples.
+- [Modules](/concepts/modules): the concept.

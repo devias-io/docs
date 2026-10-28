@@ -1,0 +1,40 @@
+---
+title: Change feed
+description: "How to follow every change in a Devias workspace as a server-sent events stream. Covers the ready event, ids that are per-workspace increasing sequence numbers, resuming with Last-Event-ID or ?after=, every event type, the common event fields, and which events a person may see."
+icon: radio
+---
+
+Every change in a workspace is written to an ordered log that can be followed. The studio uses it to stay up to date without refreshing, and another system can use it to stay in step.
+
+## How the stream works
+
+A client opens a long-lived connection to the workspace's events route. It is a standard **server-sent events** stream.
+
+1. The server first sends a `ready` event with the current `sequence`.
+2. It then sends events as they happen. Each has an `id`, which is its sequence number, and an event name, which is its type.
+3. If the connection drops, the client reconnects and sends the last `id` it saw, in the `Last-Event-ID` header or as `?after=`. It receives only what it missed.
+
+Sequence numbers only increase, per workspace. That makes resuming exact: with the last handled sequence kept, no event is missed and none is handled twice.
+
+## Event types
+
+| Type | When |
+| --- | --- |
+| `record.created`, `record.updated`, `record.deleted` | A record changed. |
+| `comment.created`, `comment.updated`, `comment.deleted` | A comment on a record changed. |
+| `metadata.changed` | The data model changed. |
+| `module.applied` | A module was installed or updated. |
+| `module.connected`, `module.disconnected`, `module.connection.failed` | A module's connection was made, removed, or refused by the service. |
+| `module.event` | A module received an event from an outside service. |
+| `workflow.changed`, `workflow.run` | A workflow was created, changed or removed, or one of its runs was queued or finished. |
+| `task.changed`, `document.changed` | A task or a document changed. |
+| `notification.changed` | A notification was created, read or removed. |
+
+Every event carries its `sequence`, its `type`, the `workspaceId`, who did it (`actor`) and when (`occurredAt`), plus the ids that say what it is about, such as the `recordId` or the `taskId`.
+
+A caller receives only the events it may see. A notification event goes to its recipient alone.
+
+## Related
+
+- [SDK events and notifications](/reference/sdk/events-and-notifications): subscribe in one line.
+- [Workflows and tasks](/concepts/automation): act on changes without code.

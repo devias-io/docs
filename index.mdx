@@ -1,0 +1,55 @@
+---
+title: What Devias is
+sidebarTitle: Introduction
+description: "Devias is an open-source platform that works as an operating system for a business. A core provides records, workflows, agents and permissions, installable modules add areas such as CRM and invoicing, and it runs on your own server."
+icon: book-open
+---
+
+Devias is an open-source platform that works as an operating system for a business. A **core** provides records, views, workflows, tasks, documents, agents and permissions. **Modules** add areas of the business on top: customers, quotes, invoices, payments, expenses, products and stock. Everything runs on one server, in a database you control, and everything shares the same records.
+
+<Frame caption="The Home page of the studio, with the assistant asking before it changes a deal.">
+  <img src="/images/studio-assistant.webp" alt="The Devias studio: a Home dashboard with money in, pipeline and tasks, and the assistant panel open with an approval card for a comment on a deal" />
+</Frame>
+
+## Parts of Devias
+
+| Part | What it is |
+| --- | --- |
+| Core | Records, views and layouts, workflows, tasks, documents, notifications, agents and skills, roles and permissions, connections, the HTTP API, the SDK and the CLI. |
+| Modules | Packages that add one area of the business: objects and fields, views, actions, workflows, connections, agents. Examples: CRM, Quotes, Invoicing, Payments via Stripe. |
+| Studio | The React web app people use. |
+| Server | An HTTP API with a data engine over Postgres. |
+
+See [Architecture](/concepts/architecture).
+
+## Properties
+
+- **Modular.** Each area of the business is a module. Modules are installed from a reviewed plan, and a workspace can build its own. See [Modules](/concepts/modules).
+- **Data defines the product.** Objects and fields are stored as data, so a field added in Settings and a field a module ships behave the same, and a change needs no rebuild. See [Data model](/concepts/data-model).
+- **Agents with limits.** An agent acts with the role of the person who asked. Each of its tools runs freely or asks first, and every change is logged. See [Agents](/concepts/agents).
+- **Open and extensible.** The platform is under the AGPL-3.0. The SDK, the UI kit and the CLI are MIT. There is a React studio, TypeScript modules, a typed SDK and an HTTP API described in OpenAPI.
+- **Self-hosted.** It runs on your own server with Postgres, or with an embedded database to try it. A hosted cloud version is planned and has no price yet.
+
+## When Devias fits
+
+- A business process does not fit a standard CRM or ERP, and the data, rules and hosting should stay under the company's control.
+- A team or agency builds operations software for clients and wants a base to build on instead of an empty repository.
+
+## When Devias does not fit yet
+
+- The need is a fully mature, hands-off product today. Devias is young and changes quickly, and some areas are rough.
+- Nobody can write TypeScript, and the need goes beyond what Settings and the assistant can configure.
+- Other agents, such as Claude or ChatGPT, must use Devias directly. Connecting them through MCP is planned. Today the agent inside Devias uses the same actions as the app.
+
+## Find a page by need
+
+| Need | Page |
+| --- | --- |
+| Run it on one machine | [Quickstart](/quickstart) |
+| Learn the ideas | [Architecture](/concepts/architecture) and [Data model](/concepts/data-model) |
+| Look up a term | [Glossary](/start/glossary) |
+| Work in the studio | [Navigate the studio](/guides/studio/navigate-the-studio) |
+| Build a module | [What a module is](/guides/modules/what-a-module-is) |
+| Call it from code | [HTTP API](/reference/api/overview) and [TypeScript SDK](/reference/sdk/client) |
+| Host it | [Deploy](/operate/deploy) |
+| Read these docs as an AI agent | [Use these docs with AI](/start/use-with-ai) |

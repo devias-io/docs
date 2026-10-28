@@ -1,0 +1,29 @@
+---
+title: devias apply
+description: "devias apply prints the plan, asks for confirmation and applies it. Flags: -y skips the question, --allow-destructive allows deletions. It refuses when the plan has conflicts, when a destructive change is not allowed, or when the workspace changed since the plan was shown."
+icon: check
+---
+
+`devias apply` applies a module manifest to a workspace after showing the plan.
+
+```bash
+devias apply -w <workspaceId> -m ./src/manifest/index.ts
+```
+
+It prints the plan, asks **Apply these changes?** and applies it. If there is nothing to change, it says so and stops.
+
+| Flag | What it does |
+| --- | --- |
+| `-y, --yes` | Skip the question, for scripts. |
+| `--allow-destructive` | Allow changes that delete data. |
+
+## When it refuses
+
+- The plan has **conflicts**: it stops and says to resolve them first.
+- The plan has **destructive** changes and `--allow-destructive` was not passed: it stops. Run it again with the flag after reading the plan.
+- The workspace changed since the plan was shown: the apply is refused, because an apply is tied to the plan that was reviewed.
+
+## Related
+
+- [devias dev](/reference/cli/dev): apply on every save.
+- [devias uninstall](/reference/cli/uninstall): remove a module.

@@ -1,0 +1,83 @@
+---
+title: Glossary
+description: Definitions of every Devias term, with the page that explains it. Includes the rule for name, label and title, what an id is, every term from action to workspace, and a table mapping each define function of a module manifest or studio config to the page that documents it.
+icon: book-a
+---
+
+Each term below has one meaning across all Devias pages and APIs. Use these words exactly.
+
+## Names, labels and titles
+
+Three words name text, and each has one use.
+
+| Word | Use | Examples |
+| --- | --- | --- |
+| `name` | An API name, which code uses and people never read, or what a party is called. | `nameSingular`, `namePlural` of an object, the `name` of a field or an action, the name of a member, workspace, API key, agent or module |
+| `label` | The text people read for a part of the data model or the interface. | `label` of a field, `labelSingular` and `labelPlural` of an object, the label of a view, nav item or skill |
+| `title` | The text of a page of work. | The title of a document, comment, task, conversation, notification or workflow |
+
+## Id
+
+An **id** is a uuid that identifies something a module declares: the module, an object, a field, a view, an action, a workflow and its steps, a connection, a variable, an event, a policy. An id is made once and never changes. Names and labels can change between versions, and ids stay. Nothing reads meaning out of an id. Ids define ownership: a module owns what it declared, and the workspace owns what people created. Generate ids with [`devias id`](/reference/cli/id). Workspace ids are not uuids.
+
+## Terms
+
+| Term | Definition |
+| --- | --- |
+| Action | A named server function that a module declares and implements. It can be run from a record-page button, a workflow step, the HTTP API and an agent tool. See [Actions and server code](/guides/modules/actions-and-server-code). |
+| Agent | An AI assistant that works inside a workspace: instructions plus a tool list. It acts with the role of the person who asked. See [Agents](/concepts/agents). |
+| Apply | The second step of installing or updating a module: write a reviewed plan to the workspace. See [Plan and apply](/guides/modules/plan-and-apply). |
+| API key | A credential created in Settings, sent in the `x-api-key` header, with its own permissions and expiry. See [API authentication](/reference/api/authentication). |
+| Approval card | What an agent shows when a tool set to Ask first stops. The person approves or rejects the call. |
+| Block | A React component Devias places on a screen: Home, a record page, a dialog, a side panel or an approval. See [Blocks](/guides/customize-studio/blocks). |
+| Branch | A workflow step kind (`branch`) that chooses the next steps by a condition. |
+| Command | An entry in the command palette (`⌘K`). |
+| Connection | The credentials a module uses for an outside service. Its `kind` is `api_key` or `oauth2`, and it belongs to the workspace or to one person. |
+| Core module | A module that comes with every workspace: the studio itself (Home, Tasks, Documents, Workflows, Agents, Skills). |
+| Document | A page of rich text with comments and `@mentions`. |
+| Event | A record in the workspace's ordered log of something that happened: a record, task or metadata change, a workflow run, or an event a module received from a service. See [Change feed](/reference/api/change-feed). |
+| Field | One piece of information on an object, with a `type`. See [Data model](/concepts/data-model). |
+| Layout | How one record's page is arranged: a shell (`tabs`, `column` or `split`) and blocks. |
+| Manifest | The plain-data declaration of a module, created with `defineModule`. |
+| Member | A person in a workspace, with a role. |
+| Module | A package that adds one area of the business to a workspace. See [Modules](/concepts/modules). |
+| Navigation item | A row of the sidebar. Its target `kind` is `object`, `page`, `url` or `group`. |
+| Notification | A message from a workflow, a module or an agent, shown behind the bell. |
+| Object | A kind of thing a workspace keeps track of, such as Person or Deal. |
+| Plan | The first step of installing or updating a module: a list of changes, each `create`, `update`, `delete` or `conflict`, with nothing written. |
+| Policy | A module's declared default for whether an action applies, waits for review or is refused (`auto`, `review`, `deny`). Experimental: stored and shown, not enforced. |
+| Record | One row of an object. |
+| Relation | A field `type` that links a record to a record of another object. |
+| Role | A member's permission level: `owner`, `admin` or `member`. See [Access and permissions](/concepts/access). |
+| Run | One execution of a workflow, with a status of `pending`, `running`, `succeeded` or `failed` and the result of each step. |
+| Skill | A procedure an agent loads only when a request matches its description. See [Skills](/guides/agents/skills). |
+| Slug | The part of a workspace's address after `/workspaces/`. |
+| Step | One item of a workflow. Its `kind` is `action` or `branch`. |
+| Studio | The React web app people use. |
+| Task | A unit of work for a person or an agent, with a status and a priority. See [Tasks](/guides/studio/tasks). |
+| Tool | One thing an agent may do, set per agent to Runs freely or Ask first. |
+| Trigger | What starts a workflow. Its `kind` is `manual`, `schedule`, `record_event`, `task_event` or `module_event`. |
+| Variable | A setting a module declares with `defineVariable` and an admin sets per workspace. |
+| View | A saved way of looking at one object: a table, a kanban board or a calendar. |
+| Webhook | A module's address that receives events from an outside service. Its `parse` function verifies the signature and returns events. |
+| Workflow | One trigger and a list of steps that run in order. See [Workflows and tasks](/concepts/automation). |
+| Workspace | One company's space: its data, members, modules and settings. |
+
+## Define functions
+
+A module manifest and the studio config are built with `define…` functions.
+
+| Function | Declares | Page |
+| --- | --- | --- |
+| `defineModule` | A module: id, version, label, parts | [What a module is](/guides/modules/what-a-module-is) |
+| `defineObject`, `defineField` | Objects and fields | [Objects and fields in a module](/guides/modules/objects-and-fields) |
+| `defineView`, `defineLayout`, `defineNavItem`, `defineCommandItem` | Views, layouts, navigation and commands | [Views and navigation in a module](/guides/modules/views-layouts-navigation) |
+| `defineAction`, `defineActionHandler`, `defineModuleServer` | Actions and their server code | [Actions and server code](/guides/modules/actions-and-server-code) |
+| `defineConnection`, `defineVariable`, `defineEvent` | Connections, settings and events | [Connections and events in a module](/guides/modules/connections-and-events) |
+| `defineWorkflow` | A workflow a module ships | [Workflows in a module](/guides/modules/workflows) |
+| `defineAgent`, `defineSkill` | Agents and skills | [Agents and skills in a module](/guides/modules/agents-and-skills) |
+| `definePolicy` | A default review policy (experimental) | [Publish a module](/guides/modules/publishing) |
+| `defineBlock`, `defineBlockComponent` | Blocks | [Blocks](/guides/customize-studio/blocks) |
+| `definePage`, `definePageComponent`, `defineCommand`, `defineSettingsSection` | Pages, commands and Settings sections | [Pages and commands](/guides/customize-studio/pages-commands) |
+| `defineFieldType`, `defineViewType` | New field and view types | [Field and view types](/guides/customize-studio/field-and-view-types) |
+| `defineStudio` | The studio's config | [Customize the studio](/guides/customize-studio/what-you-can-customize) |

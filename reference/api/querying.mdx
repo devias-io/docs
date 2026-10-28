@@ -1,0 +1,54 @@
+---
+title: Querying records
+sidebarTitle: Querying
+description: "The JSON query format for listing records through the Devias API: object, select, filter, sort, limit (default 50, up to 200), cursor, search, include and count. Lists every filter operator, how and, or and not combine conditions, and how nextCursor paging works."
+icon: search
+---
+
+Listing records takes a **query**, which is the same JSON the SDK's query builder produces.
+
+```json
+{
+  "object": "person",
+  "select": ["first_name", "company"],
+  "filter": {
+    "and": [
+      { "field": "stage", "op": "eq", "value": "customer" },
+      { "field": "email", "op": "is_not_empty" }
+    ]
+  },
+  "sort": [{ "field": "first_name", "direction": "asc" }],
+  "limit": 50
+}
+```
+
+| Property | What it does |
+| --- | --- |
+| `object` | The object's API name. |
+| `select` | Return only these fields. |
+| `filter` | Keep only records that match. |
+| `sort` | Order the results. |
+| `limit`, `cursor` | Page size (up to 200, default 50) and where to continue. |
+| `search` | Match free text across the searchable fields. |
+| `include` | Also return the records a relation points at. |
+| `count` | Also return the total number of matches, up to a cap. |
+
+## Filters
+
+A filter is a condition, `{ "field", "op", "value" }`, or a group of conditions combined with `and`, `or` or `not`. The operators (`op`) are `eq`, `neq`, `in`, `not_in`, `lt`, `lte`, `gt`, `gte`, `between`, `contains`, `starts_with`, `is_empty`, `is_not_empty`, `any_of` and `all_of`.
+
+## Pages
+
+A response holds the records and a cursor:
+
+```json
+{ "items": [], "nextCursor": "abc123" }
+```
+
+While `nextCursor` is not `null`, send it back as `cursor` to get the next page. Stop when it is `null`. A cursor is opaque: it must not be built or changed by the client.
+
+## Related
+
+- [SDK records and queries](/reference/sdk/records-and-queries): build the same query in TypeScript.
+- [API errors](/reference/api/errors): what a bad query returns.
+- [Data model](/concepts/data-model#built-in-field-types): which field types can be sorted, grouped and searched.

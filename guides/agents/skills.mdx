@@ -1,0 +1,41 @@
+---
+title: Skills
+description: How to write and use skills. A skill is a procedure written once, with a label, a one-line description the agent matches against, and a Markdown body. Explains why a skill is not an instruction, who can use a skill, and how module skills behave.
+icon: book-open
+---
+
+A **skill** is a procedure written once and used by any agent that needs it, for example "how we qualify a lead" or "how to close out a deal".
+
+## Skill or instruction
+
+An agent's instructions are read in every conversation. A skill is read only when it is relevant: the agent sees each skill's one-line description and loads the full text only when a request matches. This keeps conversations focused and allows as much detail as a procedure needs.
+
+## Write a skill
+
+Choose **Skills** in the sidebar and create one. A skill has three parts.
+
+| Part | Meaning |
+| --- | --- |
+| `label` | The name people see. |
+| `description` | One line saying when to use the skill. The agent matches requests against it. |
+| `body` | The procedure, in Markdown. |
+
+Write the body as numbered steps, and say what to do when something is missing.
+
+```md
+# Close out a deal
+
+1. Set its stage to Lost.
+2. Set its lost reason. Ask which one if you do not know; never guess.
+3. Log a comment with what the person said about why.
+```
+
+## Who can use a skill
+
+- A skill written in the workspace is available to agents given access to it, and to any agent that may use every skill.
+- A skill that comes from a module belongs to that module. It updates with the module and is archived when the module is uninstalled. It can be switched off but not edited.
+
+## Related
+
+- [Define an agent](/guides/agents/define-an-agent): give an agent access to skills.
+- [Agents and skills in a module](/guides/modules/agents-and-skills): ship them with a module.

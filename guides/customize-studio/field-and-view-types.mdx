@@ -1,0 +1,56 @@
+---
+title: Field and view types
+description: "How a module adds a new field type or view type from its ./studio export. Lists the parts of defineFieldType (type, label, icon, cell, editor, toText, filter, sortable, groupable) and defineViewType with its capabilities, and when to use a built-in instead."
+icon: table
+---
+
+Devias ships built-in field types and view types. A module can add more from its `./studio` export with `defineFieldType` and `defineViewType`. The built-in field types are listed in [Data model](/concepts/data-model#built-in-field-types).
+
+## Add a field type with defineFieldType
+
+A field type says how a value is stored, shown and edited. The CRM's star **rating** is an example.
+
+```tsx
+export const ratingType = defineFieldType<number>({
+  type: 'rating',
+  label: 'Rating',
+  icon: 'star',
+  cell: ({ value }) => <Stars value={value} />,
+  editor: ({ value, onChange }) => <Stars value={value} onPick={onChange} />,
+  toText: (value) => (value ? `${value} of 5` : ''),
+})
+```
+
+| Part | What it is for |
+| --- | --- |
+| `type`, `label`, `icon` | How the type is named and shown in the data model settings. |
+| `cell` | How a value looks in a table or a card. |
+| `editor` | How a person changes it. |
+| `toText` | The value as plain text, for search and export. |
+| `filter`, `sortable`, `groupable` | Whether views can filter, sort and group by it. |
+
+Register it on the module's studio side with `fieldTypes: [ratingType]`. Fields of that `type` are then declared in the manifest like built-in ones.
+
+## Add a view type with defineViewType
+
+The built-in view types are `table`, `kanban` and `calendar`. A view type is a React component that receives the records and the view's settings, plus flags (`capabilities`) saying which toolbar controls apply: filter, sort, group by, fields, search.
+
+```tsx
+defineViewType({
+  type: 'gallery',
+  label: 'Gallery',
+  icon: 'layout-grid',
+  capabilities: { filter: true, sort: true, groupBy: false },
+  component: GalleryView,
+})
+```
+
+Register it with `viewTypes: [...]`. Views in a manifest can then use `type: 'gallery'`.
+
+A custom type is needed only when no built-in fits. Most needs for a new field are a built-in type with the right `settings`, and most needs for a new view are a better table.
+
+## Related
+
+- [Blocks](/guides/customize-studio/blocks): add pieces to Home and record pages.
+- [Objects and fields in a module](/guides/modules/objects-and-fields): declare fields of a type.
+- [Data model](/concepts/data-model): the built-in field types.

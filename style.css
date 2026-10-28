@@ -1,0 +1,106 @@
+/*
+ * Matches devias.io: one dark surface (#0b0b0b), neutral white controls, pills for everything you press, Inter at
+ * light weights with tight headings, 6px corners, and the lime kept for small marks. The colors, fonts and
+ * logo are set in docs.json; this file adds what it cannot.
+ */
+@import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&display=swap");
+
+:root {
+  --devias-card: #141414;
+  --devias-border: #262626;
+  --devias-muted: #a3a3a3;
+  --devias-pill: rgb(255 255 255 / 0.14);
+}
+
+/* Full width: the page column fills the window instead of stopping at Mintlify's 88rem. */
+[class*="max-w-8xl"] {
+  max-width: none !important;
+}
+
+/* The page is full width, but the text keeps a readable line length. */
+#content-area {
+  max-width: 56rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Headlines: regular weight and tight, like the website. */
+#page-title {
+  font-weight: 400;
+  letter-spacing: -0.04em;
+}
+
+#content-area h2,
+#content-area h3 {
+  font-weight: 450;
+  letter-spacing: -0.03em;
+}
+
+/* The small line above the title is muted, not an accent. */
+.eyebrow {
+  color: var(--devias-muted);
+  font-weight: 450;
+}
+
+/* "Get a demo": the website's white pill. */
+#topbar-cta-button a {
+  border-radius: 6px;
+  padding-left: 0.875rem;
+}
+
+#topbar-cta-button a > span.absolute {
+  background-color: rgb(255 255 255 / 0.9);
+  border-radius: 6px;
+}
+
+#topbar-cta-button a span,
+#topbar-cta-button a svg {
+  color: #111111;
+}
+
+/* Search and the sidebar's rows have small corners, and fill on hover and when active. */
+#search-bar-entry {
+  border-radius: 6px;
+}
+
+#sidebar-content li > a {
+  border-radius: 6px;
+}
+
+#sidebar-content li > a:hover {
+  background-color: var(--devias-pill);
+}
+
+/* Cards and panels sit a step lighter than the page, with a hairline border and 8px corners. */
+.card,
+.callout,
+.accordion,
+.frame,
+.code-block {
+  border-radius: 6px;
+}
+
+/* Everything else Mintlify rounds generously gets the same small corner. */
+[class*="rounded-xl"],
+[class*="rounded-2xl"],
+[class*="rounded-3xl"] {
+  border-radius: 6px !important;
+}
+
+.card,
+.callout {
+  background-color: var(--devias-card);
+  border-color: var(--devias-border);
+}
+
+/* Code in Geist Mono, as on the website. */
+code,
+pre,
+.code-block {
+  font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+::selection {
+  background-color: #9fe870;
+  color: #111111;
+}

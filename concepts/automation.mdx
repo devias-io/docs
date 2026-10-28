@@ -1,0 +1,71 @@
+---
+title: Workflows and tasks
+description: How work is automated and tracked in Devias. A workflow is a trigger and steps that run in order as the workflow itself. Lists the five trigger kinds, the two step kinds, run states and limits, then tasks, documents and notifications.
+icon: workflow
+---
+
+A **workflow** is one trigger and a list of steps that run in order when the trigger happens. **Tasks** track work for people and agents, **documents** hold rich text with comments, and **notifications** tell people what happened.
+
+## Workflows
+
+### Trigger kinds
+
+A workflow has exactly one trigger. The `kind` is one of these values.
+
+| `kind` | Runs when |
+| --- | --- |
+| `manual` | A person runs it from a record's Actions menu, or the API runs it |
+| `schedule` | The clock matches a schedule such as weekdays at 09:00 (UTC). A schedule can run once per matching record of an object. |
+| `record_event` | A record is created, updated or deleted |
+| `task_event` | A task is created, assigned, commented on or changes status |
+| `module_event` | A module reports something, such as a payment received |
+
+### Step kinds
+
+A step's `kind` is `action` or `branch`.
+
+- `action` runs an action: update a record, create one, send a notification, or call an action a module declares.
+- `branch` chooses which steps run next, based on a condition.
+
+### Runs
+
+Every execution of a workflow is a **run**. A run has a status of `pending`, `running`, `succeeded` or `failed`, and records the outcome of each step. A run is saved step by step, so a restart does not lose it. A step whose action reports a temporary failure, such as a service being busy, is tried again later by itself. See [Workflow runs and retries](/guides/modules/workflows#retries).
+
+### Limits
+
+| Limit | Value |
+| --- | --- |
+| Steps in one workflow, counting steps inside branches | 50 |
+| Nesting depth of branches | 5 |
+| Records one scheduled run fans out to | 500 |
+| Runs kept per workflow, oldest pruned first | 1000 |
+| Runs of one workflow waiting or being worked on at once | 1000 |
+| Retries of a step that asked for one | 5 |
+
+### Who a workflow acts as
+
+A workflow acts as itself, not as a person. It can read and write records and run module actions, and it cannot change the workspace's settings. A module can ship workflows of its own. A workspace can switch those on or off, or copy them.
+
+## Tasks
+
+A **task** is a unit of work for a person or an agent. It has a status and a priority, and it can be linked to records and documents. Tasks are shown as a list or a board.
+
+| Property | Values |
+| --- | --- |
+| Status | `backlog`, `todo`, `in_progress`, `in_review`, `done`, `canceled` |
+| Priority | `urgent`, `high`, `medium`, `low`, `none` |
+
+## Documents and comments
+
+**Documents** are rich-text pages with comments and `@mentions`. Records and tasks have comments too.
+
+## Notifications
+
+Workflows, modules and agents can notify people. Notifications appear behind the bell in the studio. A notification can address people by role: `owner`, `admin` or `member`.
+
+## Related
+
+- [Workflows in the studio](/guides/studio/workflows): create, schedule and watch a workflow.
+- [Workflows in a module](/guides/modules/workflows): ship a workflow, make an action safe to repeat, retries.
+- [Tasks](/guides/studio/tasks): work with tasks, including giving one to an agent.
+- [Agents](/concepts/agents): agents can take tasks.

@@ -1,0 +1,41 @@
+---
+title: Customize the studio
+sidebarTitle: Overview
+description: "The Devias studio is a React app configured in apps/studio/src/studio.config.tsx with defineStudio. Lists every setting (title, modules, structure, defaultPage, contact, agentImages) and the kinds of parts that can be added: sidebar structure, field and view types, blocks, pages, commands and theme."
+icon: paintbrush
+---
+
+The studio is the app a team works in. Most of what it shows comes from modules and from data, and the app itself is configured in one small file, `apps/studio/src/studio.config.tsx`, with `defineStudio`.
+
+```tsx
+export const studioConfig = defineStudio({
+  title: 'Acme',
+  modules,
+  structure: (S) => S.list().items([S.navItems()]),
+});
+```
+
+`defineStudio` takes a handful of settings:
+
+| Setting | What it does |
+| --- | --- |
+| `title` | What the studio is called, for example on the sign-in pages. |
+| `modules` | The modules to load, in order. They come from `devias.config.ts`. A later module wins when two contribute the same thing. |
+| `structure` | The sidebar. See [Sidebar structure](/guides/customize-studio/structure). |
+| `defaultPage` | Where people land after signing in. |
+| `contact` | A link in the sidebar for reaching you, such as an email address. |
+| `agentImages` | Pictures for agents, by icon name. |
+
+## Parts that can be added
+
+- [Sidebar structure](/guides/customize-studio/structure): what appears in the sidebar, and in what order.
+- [Field and view types](/guides/customize-studio/field-and-view-types): new kinds of field and new ways to look at records.
+- [Blocks](/guides/customize-studio/blocks): pieces for Home, record pages and the side panel.
+- [Pages and commands](/guides/customize-studio/pages-commands): whole screens and palette commands.
+- [Theming](/guides/customize-studio/theming): colours, fonts and corners.
+
+## Where the code lives
+
+A part can come from the app itself, in `studio.config.tsx`, or from a module's `./studio` export. A part that belongs with a module's data should live in the module, so that it travels with it.
+
+To work on the studio without a server, run `VITE_MOCK=1 pnpm dev:studio`. It starts the studio on an in-memory fake backend.

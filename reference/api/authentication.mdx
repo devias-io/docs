@@ -1,0 +1,42 @@
+---
+title: API authentication
+sidebarTitle: Authentication
+description: "How to authenticate to the Devias HTTP API. The studio uses a session cookie. Scripts, servers and the CLI use an API key sent in the x-api-key header. A key belongs to one workspace, carries a permissions map, and a call outside it is refused with FORBIDDEN."
+icon: key-round
+---
+
+A request authenticates in one of two ways: a session cookie or an API key.
+
+## Session cookie, for the studio
+
+People sign in through the studio, and the server sets a session cookie. A browser app that calls the API sends that cookie with each request. The studio itself works this way.
+
+## API key, for scripts, servers and the CLI
+
+An **API key** is created in **Settings → API keys** with an expiry. It is shown once, when it is created. It is sent in the `x-api-key` header.
+
+```bash
+curl -X POST "https://api.example.com/api/workspaces/<workspaceId>/records/person/list" \
+  -H "x-api-key: $DEVIAS_API_KEY" \
+  -H "content-type: application/json" \
+  -d '{ "limit": 5 }'
+```
+
+A successful call returns `{ "items": [...], "nextCursor": ... }`. The route `GET /api/me` requires a signed-in person and does not accept an API key.
+
+A key belongs to one workspace and only works there.
+
+## Permissions of a key
+
+Each key carries a map from an area to the actions it allows. A call outside that map is refused with `FORBIDDEN`.
+
+```json
+{ "record": ["read", "write"] }
+```
+
+A key made in the studio can read records. A key with more permissions is created through the API with a `permissions` map. For example, `devias plan` and `devias apply` need `{ "module": ["manage"] }`. A key should have only what it needs and should be deleted when no longer used.
+
+## Related
+
+- [Errors](/reference/api/errors): what `FORBIDDEN` and `UNAUTHORIZED` look like.
+- [Access and permissions](/concepts/access): roles, keys, workflows and agents.

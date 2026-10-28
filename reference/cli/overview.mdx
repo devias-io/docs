@@ -1,0 +1,46 @@
+---
+title: devias CLI
+sidebarTitle: Overview
+description: "The devias command previews and applies a module manifest to a workspace from a terminal or CI. Lists the five commands (plan, apply, dev, uninstall, id), the options every command takes with their environment variables, how to run it from the repository, and the API key permission it needs."
+icon: terminal
+---
+
+`devias` is a command-line tool for working with modules. It reads a manifest, asks the server what would change, and applies it. It never uses a browser session: every command signs in with an **API key**.
+
+## Run it
+
+Inside the repository, run the entry point with Node. There is nothing to build.
+
+```bash
+node packages/cli/bin/devias.js plan -w <workspaceId> -m ./src/manifest/index.ts
+```
+
+If `@devias/cli` is a dependency of your project, the same command is available as plain `devias`. The rest of these pages write `devias`.
+
+## Options every command takes
+
+| Flag | Environment variable | Meaning |
+| --- | --- | --- |
+| `-m, --manifest <path>` | | Your manifest file: `.ts`, `.js` or `.json`. It must export `manifest`, or a default export. |
+| `-w, --workspace <id>` | | The workspace id. Copy it from **Settings → General**. |
+| `-u, --url <url>` | `DEVIAS_URL` | The server. Defaults to `http://localhost:3000`. |
+| `-k, --api-key <key>` | `DEVIAS_API_KEY` | The API key to use. |
+
+<Warning>
+  The key must be allowed to manage modules. A key made in **Settings → API keys** can only read records, so create the key through the API with `permissions: { "module": ["manage"] }`.
+</Warning>
+
+## Commands
+
+| Command | Purpose |
+| --- | --- |
+| [`devias plan`](/reference/cli/plan) | Show what would change. |
+| [`devias apply`](/reference/cli/apply) | Apply the change. |
+| [`devias dev`](/reference/cli/dev) | Re-apply on every save. |
+| [`devias uninstall`](/reference/cli/uninstall) | Remove a module. |
+| [`devias id`](/reference/cli/id) | Generate new ids. |
+
+## Related
+
+- [Plan and apply](/guides/modules/plan-and-apply): how plans work.
+- [Create a first module](/guides/modules/first-module): a procedure that uses the CLI.

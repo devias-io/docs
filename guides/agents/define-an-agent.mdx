@@ -1,0 +1,50 @@
+---
+title: Define an agent
+description: How to create an agent. In the studio, start from a template (Blank, Read-only analyst or General) and set name, instructions, tools, starter prompts, Takes tasks and Default agent. In a module, declare it with defineAgent. Includes rules for writing instructions.
+icon: plus
+---
+
+An agent can be defined in two places: in the studio for one workspace, or in a module so that every workspace that installs the module gets it.
+
+## Define an agent in the studio
+
+Choose **Agents** in the sidebar and create one. Start from a template.
+
+| Template | What it gives |
+| --- | --- |
+| Blank | Nothing. Everything is chosen by hand. |
+| Read-only analyst | Looks things up and answers questions. It cannot change anything. |
+| General | Every tool the person may use, including tools added later. |
+
+Then set these properties.
+
+| Property | Meaning |
+| --- | --- |
+| Name and What it is for | Shown when picking an agent. |
+| Instructions | Added to every conversation with this agent. |
+| Tools | All of them, or a chosen list. Each is set to **Ask first** or **Runs freely**. |
+| Starter prompts | Suggestions shown at the start of a conversation. |
+| Takes tasks | Lets people assign tasks to the agent. |
+| Default agent | Makes Home and new conversations start with this agent. |
+
+An agent's page has a tab for each part: General, Instructions, Tools, Skills and Usage.
+
+## Define an agent in a module
+
+A module declares agents in its manifest with `defineAgent`. They are created when the module is installed, updated with it, and archived when it is uninstalled. See [Agents and skills in a module](/guides/modules/agents-and-skills).
+
+## Write effective instructions
+
+- State what the agent is for in the first line.
+- Describe how the business works in plain words: stages, rules and units.
+- State what it must never do, and who to ask instead.
+- Tell it to look a record up before creating one, to avoid duplicates.
+- Keep the instructions short. A few clear rules are followed better than a long list.
+
+Step-by-step procedures belong in a [skill](/guides/agents/skills), not in the instructions: an agent loads a skill only when it needs it.
+
+## Related
+
+- [Skills](/guides/agents/skills): teach an agent a procedure.
+- [Tools and approvals](/guides/agents/tools-and-approvals): set what an agent may do.
+- [Agents](/concepts/agents): the concept.

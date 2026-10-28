@@ -1,0 +1,80 @@
+---
+title: Actions and server code
+description: "How a module declares an action once and implements it in server code. The action is then available as a record-page button, a workflow step, an agent tool and an API route. Lists input types, the handler context (ctx), and how errors and retryable errors behave."
+icon: server
+---
+
+Some things a module does cannot be expressed as data: recalculating an invoice, creating a payment link, moving stock. A module implements them as **actions** in **server code**. An action is declared once in the manifest with `defineAction` and implemented with `defineActionHandler`.
+
+## Declare an action in the manifest
+
+An action has a name, a label and the inputs it takes.
+
+```ts
+defineAction({
+  id: ids.archive,
+  name: 'archive_project',
+  label: 'Archive a project',
+  input: [
+    { name: 'project_id', label: 'Project', type: 'record', objectId: ids.project, required: true },
+  ],
+})
+```
+
+That declaration makes Devias offer the action in four places:
+
+- as a button on record pages, when a layout lists it;
+- as a step in workflows;
+- as a tool for agents, called by its `name`;
+- as an API route.
+
+An input `type` is one of `text`, `long_text`, `email`, `number`, `boolean`, `json` or `record`. A `record` input holds the id of a record of the object named in `objectId`. An `output` list says what the action returns, so a workflow can use the result in a later step and an agent knows what it got back.
+
+By default an agent must ask before it runs an action. `approval: 'auto'` marks an action that is safe to run on its own.
+
+## Implement the action in server code
+
+The code lives in the module's `./server` export. A handler pairs the action's id with the work:
+
+```ts
+import { defineActionHandler, defineModuleServer } from '@devias/server';
+import { z } from 'zod';
+
+export const server = defineModuleServer(manifest, {
+  actions: [
+    defineActionHandler({
+      id: ids.archive,
+      input: z.object({ project_id: z.string().min(1) }),
+      run: async ({ project_id }, ctx) => {
+        await ctx.engine.records.update('project', project_id, { status: 'done' });
+        return { archived: true };
+      },
+    }),
+  ],
+});
+```
+
+At start-up Devias checks that every declared action has exactly one handler and that the handler's input matches what the manifest declares.
+
+## Handler context (ctx)
+
+| Member | Use |
+| --- | --- |
+| `ctx.engine` | Reading and writing records, as the action itself. |
+| `ctx.connection()` | The credentials of the connection in use. |
+| `ctx.variables` | The module's settings in this workspace. |
+| `ctx.kv` | A small store for the module's own state, such as a sync cursor. |
+| `ctx.step` | Which workflow step and attempt this is, when a workflow runs the action. |
+| `ctx.notify()` | Sending a notification to people. |
+| `ctx.fetch` | Calling outside services. |
+
+- Throw an error to fail the action with a message.
+- Throw a `RetryableError` for a failure that may pass, such as a rate limit. A workflow then retries the step later: see [Retries](/guides/modules/workflows#retries). `new RetryableError(message, retryAfterMs?)` can carry the delay a service asked for.
+- Return plain data to hand a result back.
+
+An action runs as itself, not as the person who triggered it. It can read and write records and call services. It can never manage the workspace.
+
+## Related
+
+- [Connections and events in a module](/guides/modules/connections-and-events): talk to an outside service.
+- [Workflows in a module](/guides/modules/workflows): run actions in the background.

@@ -1,0 +1,53 @@
+---
+title: Database
+description: "How Devias stores data. Compares the embedded PGlite database (the default when DATABASE_URL is unset) with PostgreSQL 18, shows the local Docker Compose Postgres on port 5433, and explains migrations, MIGRATE_ON_BOOT and pnpm db:migrate."
+icon: database
+---
+
+Devias stores its data in PostgreSQL. Records are kept as JSON, so adding a field never means changing a table.
+
+## Embedded database or Postgres
+
+| | Embedded | Postgres |
+| --- | --- | --- |
+| **Use it for** | Trying Devias, development, small demos | Anything real |
+| **Setup** | None | A Postgres 18 database and a connection string |
+| **Where the data is** | A folder on the server's disk | Your database |
+
+The embedded database is PGlite: Postgres compiled to run inside the server. It is what you get when `DATABASE_URL` is not set, and its files are kept in `apps/server/.data/pglite` (change it with `PGLITE_DATA_DIR`).
+
+## Use Postgres
+
+Point the server at a database with `DATABASE_URL`:
+
+```bash
+DATABASE_URL=postgres://user:password@host:5432/devias
+```
+
+For local work, the repository includes a Docker Compose file with a ready-made Postgres:
+
+```bash
+docker compose up -d postgres
+```
+
+It listens on port 5433, with the user, password and database all named `devias`. It is for development only.
+
+## Migrations
+
+The database schema is created and updated by **migrations**, plain SQL files in `apps/server/drizzle`.
+
+- On the embedded database they run automatically when the server starts.
+- On Postgres they don't, unless you set `MIGRATE_ON_BOOT=1`. Otherwise, run them yourself before starting a new version:
+
+```bash
+pnpm db:migrate
+```
+
+<Warning>
+  Back up your database before upgrading, as you would for any application. Everything your team creates is stored there.
+</Warning>
+
+## Related
+
+- [Deploy](/operate/deploy): run the server and the studio.
+- [Environment variables](/operate/environment): every setting in one table.

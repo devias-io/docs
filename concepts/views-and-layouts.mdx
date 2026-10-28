@@ -1,0 +1,55 @@
+---
+title: Views, layouts and navigation
+sidebarTitle: Views and layouts
+description: How records are listed and shown. A view is a saved table, kanban or calendar of one object, a layout arranges one record's page from blocks in a tabs, column or split shape, and navigation items and commands let people reach them.
+icon: layout-dashboard
+---
+
+A **view** lists the records of one object, a **layout** arranges the page of one record, **navigation items** build the sidebar, and **commands** fill the command palette. All four are data, so modules and workspaces define them the same way.
+
+## Views
+
+A view is a saved way of looking at one object: which records, in what order, with which fields. An object can have many views.
+
+| View kind | Shows records as |
+| --- | --- |
+| Table | Rows and columns |
+| Kanban | Cards in columns, grouped by a `select` field such as a deal's stage |
+| Calendar | Items on a date field |
+
+A view stores its filter, sort and fields. Create and edit views in **Settings → Views**, or ship them in a module. For the controls inside a view, see [Records and views](/guides/studio/records).
+
+## Layouts
+
+A layout is how one record's page is arranged. It has a **shell** and **blocks**.
+
+| Shell | Arrangement | Holds |
+| --- | --- | --- |
+| `tabs` | A header and one or more tabs | A header block, and blocks per tab |
+| `column` | One centered column, for things people write in | `blocks`, top to bottom |
+| `split` | A main column with an aside on the right, for a record read like an issue | `main` and `aside` blocks |
+
+Blocks are the pieces on the page: the record's fields, related records, comments, activity and tasks. Each object has a layout, and a module ships a default for its objects. See [Blocks](/guides/customize-studio/blocks) for the blocks a studio can draw.
+
+## Navigation
+
+The sidebar is built from navigation items. Each item points at one target.
+
+| Target `kind` | Opens |
+| --- | --- |
+| `object` | An object, optionally on a chosen view |
+| `page` | A studio page a module or the studio provides |
+| `url` | An address, optionally external |
+| `group` | Groups other items under a heading |
+
+Modules add their own items, for example Prospects and Sales from the CRM. A workspace can rename, hide and rearrange items in **Settings → Navigation**.
+
+## Command palette
+
+`⌘K` opens the command palette from anywhere. It searches records and runs commands such as **New person**. A command's action is one of `navigate`, `create_record` or `open_block`. Modules add their own commands. See [Pages and commands](/guides/customize-studio/pages-commands).
+
+## Related
+
+- [Records and views](/guides/studio/records): use views and record pages in the studio.
+- [Views, layouts and navigation in a module](/guides/modules/views-layouts-navigation): ship them from a manifest.
+- [Data model](/concepts/data-model): the objects and fields a view shows.

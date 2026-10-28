@@ -1,0 +1,28 @@
+---
+title: devias id
+description: "devias id [count] prints new uuids for a module manifest, one per line. The count defaults to 1 and can be up to 1,000. It works offline and needs no server, workspace or API key. Ids never change once made."
+icon: fingerprint
+---
+
+Everything a module declares needs an id, and an id is a uuid. This command generates them.
+
+```bash
+devias id 6
+```
+
+```text
+01a179c2-d279-756a-8fe5-00d622d7ffb9
+01a179c2-d27a-7387-8fd7-2ef9fe28a34b
+…
+```
+
+The number says how many. Without one, a single id is printed. Up to 1,000 can be requested at once.
+
+The ids go in the module's `ids.ts`. Nothing reads meaning out of an id, and ids never change, so each one is made once and kept.
+
+The command works offline: it needs no server, workspace or API key.
+
+## Related
+
+- [Create a first module](/guides/modules/first-module): use ids in a manifest.
+- [devias CLI](/reference/cli/overview): the other commands.

@@ -1,0 +1,78 @@
+---
+title: SDK records and queries
+sidebarTitle: Records and queries
+description: "How to read and write records with the TypeScript SDK. Covers records.create, get, update, delete, upsert and import, the q() query builder with select, where, orderBy, limit, cursor, include, search and count, every filter helper, cursor paging, lookup and aggregate."
+icon: table
+---
+
+Records are addressed by the **API name** of their object, such as `'person'`. Every method returns a promise.
+
+## Create, read, update, delete
+
+```ts
+const ada = await client.records.create('person', { first_name: 'Ada', last_name: 'Lovelace' });
+
+const same = await client.records.get('person', ada.id);
+
+await client.records.update('person', ada.id, { last_name: 'King' });
+
+await client.records.delete('person', [ada.id]);
+```
+
+`delete` takes a list of ids, so several records can be removed at once.
+
+Two more write methods avoid a separate read:
+
+- `upsert(object, match, values)` updates the record whose unique field matches, or creates one, and tells you which it did.
+- `import(object, body)` writes the rows of a CSV, reporting any that are invalid by row.
+
+## Ask for records
+
+`records.list` takes a **query**, built with `q()`, a chainable builder.
+
+```ts
+import { q } from '@devias/sdk';
+
+const page = await client.records.list(
+  q('person')
+    .where((f) => f.contains('first_name', 'a'))
+    .orderBy('first_name', 'asc')
+    .limit(10)
+    .build(),
+);
+
+page.items; // the records
+page.nextCursor; // pass it to .cursor() for the next page
+```
+
+| Step | What it does |
+| --- | --- |
+| `select(...fields)` | Return only these fields. |
+| `where(build)` | Keep records that match. Combine conditions with `f.and` and `f.or`. |
+| `orderBy(field, direction)` | Sort. Call it again to sort by more. |
+| `limit(n)`, `cursor(c)` | Page through results. |
+| `include(relation)` | Also return the records a relation field points at. |
+| `search(text)` | Match a word across the searchable fields. |
+| `count()` | Also return the total number of matches. |
+
+## Filters
+
+Filters are built with helpers named after what they check: `eq`, `neq`, `in`, `notIn`, `lt`, `lte`, `gt`, `gte`, `between`, `contains`, `startsWith`, `isEmpty`, `isNotEmpty`, `anyOf` and `allOf`. Combine them with `and`, `or` and `not`.
+
+```ts
+f.and(f.eq('stage', 'customer'), f.or(f.contains('last_name', 'king'), f.isEmpty('email')))
+```
+
+## Page through everything
+
+A page carries a `nextCursor` while there is more. Keep passing it back until it is `null`.
+
+## Other helpers
+
+- `lookup` finds records by what a person types, for pickers.
+- `aggregate` counts and totals records, in groups or overall.
+
+## Related
+
+- [Querying records](/reference/api/querying): the same query as JSON.
+- [Metadata and modules](/reference/sdk/metadata-and-modules): read the schema.

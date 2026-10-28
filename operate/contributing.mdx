@@ -1,0 +1,66 @@
+---
+title: Contributing
+description: "The layout of the Devias monorepo (packages, apps and modules), the everyday pnpm commands, what to run after changing the database or the API (including regenerating OpenAPI and the SDK types), the smoke tests, and the licences."
+icon: git-pull-request
+---
+
+This page describes the layout of the Devias repository and the commands used when working on Devias itself.
+
+## The repository
+
+Devias is a monorepo of small packages.
+
+| Folder | What it holds |
+| --- | --- |
+| `packages/core` | The contracts everything shares: schemas, manifests, actions, helpers. |
+| `packages/data-engine` | The server's engine: metadata, records, change feed, permissions. |
+| `packages/server` | The API for writing a module's server code. |
+| `packages/studio` | The studio: pages, views, record screens, workflows, agents. |
+| `packages/ui` | Components, icons and design tokens. |
+| `packages/sdk` | The typed client and the in-memory mock. |
+| `packages/ai` | The agent runtime. |
+| `packages/cli` | The `devias` command. |
+| `packages/fixtures` | Small modules that tests are built on. |
+| `apps/server` | The API server. |
+| `apps/studio` | The studio app, configured in one file. |
+| `modules/*` | The built-in modules: CRM, products, quotes, invoicing, expenses, inventory, Stripe, Resend and Context.dev. |
+
+## Everyday commands
+
+```bash
+pnpm dev           # the server and the studio
+pnpm typecheck     # check every package
+pnpm test          # run every test
+pnpm lint          # check formatting and style
+```
+
+While iterating, run one package's tests. Run the whole suite once at the end of a larger change.
+
+## After changing the database
+
+```bash
+pnpm db:generate   # write a migration for a schema change
+pnpm db:migrate    # apply migrations
+```
+
+## After changing the API
+
+Regenerate the API description, then the SDK's types from it. The export writes `apps/server/openapi.json` (the core API) and `apps/server/openapi.with-modules.json` (the same document plus the routes of the modules in `devias.config.ts`). The documentation publishes the second one as `reference/api/openapi.json`.
+
+```bash
+pnpm --filter @devias/server-app openapi:export
+pnpm sdk:generate
+```
+
+## Smoke tests
+
+Two scripts check the whole thing end to end against a running server: `pnpm smoke:api` walks the API, and `pnpm smoke:ui` drives the studio in headless Chrome.
+
+## Licence
+
+Most of Devias is under the [AGPL-3.0](https://github.com/devias-io/devias/blob/main/LICENSE). The SDK, the UI package and the CLI are MIT.
+
+## Related
+
+- [What a module is](/guides/modules/what-a-module-is): the most common way to extend Devias.
+- [Architecture](/concepts/architecture): studio, server and modules.

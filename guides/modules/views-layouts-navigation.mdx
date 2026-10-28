@@ -1,0 +1,51 @@
+---
+title: Views and navigation in a module
+sidebarTitle: Views and navigation
+description: "How a module declares how records are shown. Lists every property of defineView (table, kanban, calendar), defineLayout with its tabs, column and split shells, the four sidebar target kinds, and defineCommandItem for the command palette."
+icon: layout-dashboard
+---
+
+Objects hold the data. Views, layouts, navigation items and commands decide how people see it. A manifest declares each with a `define…` function.
+
+## Declare a view with defineView
+
+A view is a saved way of looking at one object.
+
+| Property | What it does |
+| --- | --- |
+| `objectId`, `label` | Which object, and what the view is called. |
+| `type` | `table`, `kanban` or `calendar`. |
+| `isDefault` | The view people land on. |
+| `fields` | The columns or card fields, in order, with optional widths. |
+| `filter` | Which records the view keeps, such as deals that are still open. |
+| `sorts` | How records are ordered. |
+| `groupById` | For a board, the field that makes the columns. |
+| `settings` | Options for the view type, such as a column total on a board. |
+
+Views are optional. An object with none gets a plain table of its first fields. Declare views to choose the columns, add a board or a calendar, and mark one `isDefault` so that people land on it.
+
+## Declare a layout with defineLayout
+
+A layout arranges a record's page. It has a `shell` (`tabs`, `column` or `split`) and the blocks inside it.
+
+Blocks come from two places. Devias ships blocks for the common things: a record's fields, related records, comments, activity and tasks. A module's studio code can add more: see [Blocks](/guides/customize-studio/blocks). If an object has no layout, Devias draws a default. Add a layout when a record page needs more, such as a second tab for the deals that belong to a company.
+
+## Declare navigation items with defineNavItem
+
+Nav items are the rows of the sidebar. Each has a label, an icon and a target.
+
+- `group` makes a heading that holds other items, linked by `parentId`.
+- `object` opens an object, optionally on a given view.
+- `page` opens a page that the module's studio code provides.
+- `url` opens a link, optionally in a new tab.
+
+Use `position` to order items among others. People can still rename, hide and rearrange them in **Settings → Navigation**.
+
+## Declare commands with defineCommandItem
+
+Command items appear in the command palette (`⌘K`). A command can create a record (**New expense**), go somewhere (**Go to expenses**) or open a block, and may have a shortcut such as `g e`.
+
+## Related
+
+- [Actions and server code](/guides/modules/actions-and-server-code): make the module do things.
+- [Views, layouts and navigation](/concepts/views-and-layouts): the concept.

@@ -1,0 +1,60 @@
+---
+title: Agents
+description: What a Devias agent is and how it behaves. An agent is instructions plus a list of tools, acts with the role of the person who asked, and stops at an approval card for any tool set to ask first. Covers where agents come from, skills and the provider key agents need.
+icon: bot
+---
+
+An **agent** is an AI assistant that works inside a workspace. It looks things up, creates and updates records, runs workflows and takes tasks, through the same actions the studio uses. It can do what the person who asked can do, and nothing else.
+
+<Frame caption="An approval card: the agent says what it wants to do, and waits.">
+  <img src="/images/studio-approval.webp" alt="An approval card titled Add a comment to a deal, showing the comment's title and text, with Approve and Reject buttons" width="299" />
+</Frame>
+
+## What happens when you ask an agent
+
+1. A message is sent, and the studio streams the agent's work back as it happens.
+2. The agent chooses which **tools** to use: look up records, create one, run a workflow.
+3. Reading and everyday edits, such as creating or updating a record, run immediately. A tool set to **Ask first**, such as one that deletes records or sends a notification, stops and shows an **approval card**.
+4. The person approves or rejects. The agent continues with the result and answers.
+
+The whole conversation is saved, including each tool call and each decision.
+
+## Parts of an agent
+
+An agent is a set of instructions plus a **list of tools**. A tool is one thing the agent may do, such as "list records" or "create a task". Each tool is set to one of two modes.
+
+| Mode | Behaviour |
+| --- | --- |
+| Runs freely | The tool runs without asking. |
+| Ask first | The tool stops and shows an approval card. The person accepts or rejects it. |
+
+The tool list is the agent's boundary: an agent can only do what its tools allow. See [Tools and approvals](/guides/agents/tools-and-approvals).
+
+## Who an agent acts as
+
+An agent acts for the person who asked, with that person's role. It can never do more than they could. History records both, so the changes an agent made and the person it acted for are visible.
+
+## Questions and secrets
+
+When an agent needs something it cannot guess, it asks a question and waits for the answer. When a step needs a secret, such as an API key, the approval card shows a form. The value goes from the person straight to the run, is never stored, and is never shown to the model.
+
+## Where agents come from
+
+- Every workspace has a default assistant. `⌘J` opens it.
+- A workspace can create its own agents in the studio. See [Define an agent](/guides/agents/define-an-agent).
+- A module can ship agents. The CRM ships a Sales agent that works the pipeline.
+- Tasks: a task can be given to an agent that takes tasks. It works through the task for the person who assigned it.
+
+## Skills
+
+A **skill** is a short how-to that an agent loads only when a request calls for it, such as "how we qualify a lead". A workspace or a module can write skills. See [Skills](/guides/agents/skills).
+
+## Requirement: a provider key
+
+Agents need a key from an AI provider: Anthropic, Google or OpenAI. See [Turn on agents in the quickstart](/quickstart#turn-on-agents) and [Environment variables](/operate/environment).
+
+## Related
+
+- [Use the assistant](/guides/studio/agents): use agents in the studio.
+- [Define an agent](/guides/agents/define-an-agent): create one in the studio or in a module.
+- [Access and permissions](/concepts/access): what each role can do.

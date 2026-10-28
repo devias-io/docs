@@ -1,0 +1,48 @@
+---
+title: API errors
+sidebarTitle: Errors
+description: "Every failed Devias API call returns the same JSON shape with a status code and an error object holding a stable code, a message and optional details. Lists all codes (VALIDATION, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, CONFLICT, PLAN_MISMATCH, RATE_LIMITED and more) with their HTTP status."
+icon: triangle-alert
+---
+
+When a call fails, the response has a status code and a body like this:
+
+```json
+{
+  "error": {
+    "code": "VALIDATION",
+    "message": "Validation failed",
+    "details": {
+      "issues": [
+        { "path": "email", "code": "invalid_format", "message": "Invalid email address" }
+      ]
+    }
+  }
+}
+```
+
+`code` is stable and can be matched in code. `message` is for people. `details` is present when there is more to say, such as which fields were wrong, and is omitted otherwise.
+
+## Error codes
+
+| Code | Status | Meaning |
+| --- | --- | --- |
+| `VALIDATION` | 400 | The request is not valid. `details` says what. |
+| `INVALID_CURSOR` | 400 | The page cursor is not one the server gave. |
+| `UNAUTHORIZED` | 401 | The caller is not signed in, or the key is wrong or expired. |
+| `FORBIDDEN` | 403 | The caller is signed in but not allowed to do this. |
+| `NOT_FOUND` | 404 | There is nothing there, or the caller cannot see it. |
+| `CONFLICT` | 409 | Someone changed it first, or it cannot be done in this state. |
+| `UNIQUE_VIOLATION` | 409 | A value that must be unique already exists. |
+| `PLAN_MISMATCH` | 409 | The workspace changed since the plan was made. |
+| `DESTRUCTIVE_CHANGE` | 409 | The change deletes data and that was not allowed. |
+| `MISSING_DEPENDENCY` | 422 | Something it needs is missing, such as a module that is not installed. |
+| `RATE_LIMITED` | 429 | Too many requests. Wait and retry. |
+| `INTERNAL` | 500 | Something went wrong on the server. |
+
+The SDK adds one more code, `NETWORK`, when the server could not be reached at all.
+
+## Related
+
+- [SDK errors](/reference/sdk/client#errors): how they look in TypeScript.
+- [Authentication](/reference/api/authentication): resolve 401 and 403.

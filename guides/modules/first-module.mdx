@@ -1,0 +1,139 @@
+---
+title: Create a first module
+sidebarTitle: First module
+description: "A complete procedure to build a manifest-only Projects module: the package.json, ids from devias id, the manifest with one object, a table view and a sidebar item, registering it in devias.config.ts, installing it, and the expected result."
+icon: rocket
+---
+
+This procedure creates a **Projects** module with one object, one view and one sidebar item. The module is a manifest only: it has no server code and no React.
+
+1. **Create the package.**
+
+   Make a folder for it under `modules/`, with a `package.json` that exports the manifest:
+   ```json
+   {
+     "name": "@acme/mod-projects",
+     "type": "module",
+     "exports": { "./manifest": "./src/manifest/index.ts" },
+     "dependencies": { "@devias/core": "workspace:*" }
+   }
+   ```
+
+2. **Generate ids.**
+
+   Everything in a module needs an id, and an id is a uuid. Ask the CLI for as many as are needed:
+   ```bash
+   node packages/cli/bin/devias.js id 6
+   ```
+   If `@devias/cli` is installed in the project, the command is `devias id 6`. Put the output in one `ids.ts` file, so the rest of the module refers to the ids by name:
+   ```ts src/manifest/ids.ts
+   export const ids = {
+     module: '01a179e9-5130-720e-aba1-0dd1b409f07a',
+     project: '01a179e9-5130-720e-aba1-1137d7faa854',
+     name: '01a179e9-5130-720e-aba1-1484a05d5671',
+     status: '01a179e9-5130-720e-aba1-1aebc1c9b2ca',
+     all: '01a179e9-5130-720e-aba1-1ff72fe38d35',
+     nav: '01a179e9-5130-720e-aba1-21025a2097df',
+   } as const;
+   ```
+   Use newly generated ids: an id is made once and never changes, and two modules must never share one.
+
+3. **Write the manifest.**
+
+   Declare the object, its fields, a view and a sidebar item:
+   ```ts src/manifest/index.ts
+   import {
+     defineField,
+     defineModule,
+     defineNavItem,
+     defineObject,
+     defineView,
+   } from '@devias/core';
+   import { ids } from './ids';
+
+   export const manifest = defineModule({
+     id: ids.module,
+     version: '0.1.0',
+     label: 'Projects',
+     icon: 'folder',
+     objects: [
+       defineObject({
+         id: ids.project,
+         nameSingular: 'project',
+         namePlural: 'projects',
+         labelSingular: 'Project',
+         labelPlural: 'Projects',
+         primaryFieldId: ids.name,
+         fields: [
+           defineField({
+             id: ids.name,
+             name: 'name',
+             label: 'Name',
+             type: 'text',
+             isRequired: true,
+           }),
+           defineField({
+             id: ids.status,
+             name: 'status',
+             label: 'Status',
+             type: 'select',
+             settings: {
+               options: [
+                 { value: 'active', label: 'Active', color: 'green' },
+                 { value: 'done', label: 'Done', color: 'neutral' },
+               ],
+             },
+           }),
+         ],
+       }),
+     ],
+     views: [
+       defineView({
+         id: ids.all,
+         objectId: ids.project,
+         label: 'All projects',
+         type: 'table',
+         isDefault: true,
+         fields: [{ fieldId: ids.name }, { fieldId: ids.status }],
+       }),
+     ],
+     navItems: [
+       defineNavItem({
+         id: ids.nav,
+         label: 'Projects',
+         icon: 'folder',
+         target: { kind: 'object', objectId: ids.project, viewId: ids.all },
+       }),
+     ],
+   });
+   ```
+
+4. **Register the module.**
+
+   Add the package to the root `package.json` as a workspace dependency, then list it in `devias.config.ts`:
+   ```ts
+   export default {
+     modules: [
+       // …the modules already listed
+       '@acme/mod-projects',
+     ],
+   };
+   ```
+
+5. **Install the module.**
+
+   Start the app, open **Settings → Modules**, choose **Projects**, review the plan and apply it.
+
+   Expected result: a **Projects** item appears in the sidebar and opens a table with the columns Name and Status.
+
+## Change the module after installing
+
+Edit the manifest and reload the studio. In development, changes that do not delete anything are applied automatically. A change that would remove something is shown for review first, so data is not lost by accident.
+
+From the terminal, `devias plan` shows what would change and `devias apply` applies it. See [Plan and apply](/guides/modules/plan-and-apply).
+
+## Related
+
+- [Objects and fields in a module](/guides/modules/objects-and-fields): all field properties, types and relations.
+- [Views, layouts and navigation in a module](/guides/modules/views-layouts-navigation): show the objects.
+- [Plan and apply](/guides/modules/plan-and-apply): preview and apply changes.

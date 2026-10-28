@@ -1,0 +1,30 @@
+---
+title: Module routes
+description: "How the HTTP API reaches into a module. Actions run by name at POST /api/workspaces/<workspaceId>/modules/<moduleId>/actions/<name>, each connection has a secret webhook address, and a module can mount its own routes under /mod/<moduleId>/ that run with the caller permissions."
+icon: puzzle
+---
+
+A module adds to the API without a separate server, in three ways: actions, webhooks and its own routes.
+
+## Actions
+
+Every action a module declares can be run over the API by its **name**, with the action's inputs as the request body. It returns what the action returns. The same permissions that bind workflows and agents apply.
+
+```text
+POST /api/workspaces/<workspaceId>/modules/<moduleId>/actions/<name>
+```
+
+`<moduleId>` is the module's uuid, as in its manifest.
+
+## Webhooks
+
+A module that receives events from an outside service has a **webhook address** for each connection, shown on its **Events** tab. The service posts to it, and the module checks the signature and stores the events. The address contains a secret token and must be treated like a password.
+
+## The module's own routes
+
+A module's server code may add routes of its own. They are mounted under the workspace at `/api/workspaces/<workspaceId>/mod/<moduleId>/`. They run as the caller, so the caller's permissions apply.
+
+## Related
+
+- [Actions and server code](/guides/modules/actions-and-server-code): write an action.
+- [Connections and events in a module](/guides/modules/connections-and-events): receive events.

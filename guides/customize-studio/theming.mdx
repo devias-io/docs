@@ -1,0 +1,42 @@
+---
+title: Theming
+description: "How to change the look of the Devias studio by redefining CSS variables from @devias/ui after importing its styles. Lists each variable group, how dark mode values work, the per-person light, dark or system choice, and the @source line needed for Tailwind classes in a module."
+icon: palette
+---
+
+The studio's look comes from a small set of CSS variables in `@devias/ui`. The app imports them once, and redefining values after that import changes the look.
+
+```css
+@import "@devias/ui/styles.css";
+
+:root {
+  --brand: #2563eb;
+  --brand-foreground: #ffffff;
+}
+```
+
+## What you can change
+
+| Variable | What it controls |
+| --- | --- |
+| `--brand`, `--brand-foreground` | The accent colour and the text on it. |
+| `--background`, `--foreground` | The page and its text. |
+| `--card`, `--border` | Panels and hairlines. |
+| `--primary`, `--primary-foreground` | Primary buttons. |
+| `--radius-*` | The roundness of corners. |
+| `--font-sans`, `--font-mono` | The fonts. Devias uses Inter and Geist Mono. |
+
+Dark mode has its own values under the `.dark` selector, so a variable is set in both places to change it everywhere.
+
+## Light, dark and system
+
+Each person chooses light, dark or follow-the-system under **Settings → Appearance**. The choice applies to that browser only.
+
+## Tailwind classes in a module's studio code
+
+If a module's studio code uses Tailwind classes, the app needs to know where to find them. A `@source` line for the module's folder goes in `apps/studio/src/styles.css`, next to the existing ones. Without it the module's styles are not generated.
+
+## Related
+
+- [Blocks](/guides/customize-studio/blocks): build something to style.
+- [Customize the studio](/guides/customize-studio/what-you-can-customize): all settings.

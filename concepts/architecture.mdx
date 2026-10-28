@@ -1,0 +1,39 @@
+---
+title: Architecture
+description: The three parts of Devias and how a change travels through them. The studio is the React app, the server is an API with a data engine over Postgres, and modules plug into both. Every client uses the same API and the same permission check.
+icon: blocks
+---
+
+Devias has three parts: the **studio**, the **server** and **modules**. All clients, including the studio, scripts, workflows and agents, reach the data through the same server.
+
+## Parts of Devias
+
+| Part | What it is |
+| --- | --- |
+| Studio | The React app people use: tables, boards, record pages, workflows and the assistant. |
+| Server | An HTTP API with a data engine behind it. It stores data in Postgres, checks permissions and announces every change. |
+| Modules | Packages that plug into both sides. A module adds objects, views and actions to the server and screens to the studio. |
+
+```text
+studio  ──────►  API + data engine  ──────►  database
+   ▲                      ▲
+   └────────  modules  ───┘
+```
+
+## One way in
+
+The studio, scripts, workflows and agents all call the same server. There is no side door: anything the studio can do, the API can do, and the same permission check applies to both. See [Access and permissions](/concepts/access).
+
+## Every change is an event
+
+When a record changes, the server writes an event. Events keep open pages up to date, start workflows, and let other systems follow changes without polling. See [Change feed](/reference/api/change-feed) and [SDK events](/reference/sdk/events-and-notifications).
+
+## The studio draws what the data describes
+
+The studio has no built-in knowledge of a "deal" or a "person". It reads a description of the objects, fields, views and layouts in the workspace and draws whatever it finds. A field added in Settings and a field shipped by a module therefore look and behave identically.
+
+## Related
+
+- [Data model](/concepts/data-model): objects, fields and records.
+- [Modules](/concepts/modules): how an area of the business is packaged.
+- [Deploy](/operate/deploy): run the server and the studio.

@@ -1,0 +1,33 @@
+---
+title: Use the assistant
+sidebarTitle: Assistant
+description: How to use agents in the studio. Covers opening the assistant, what to ask, how an approval card works, and where agents and skills are managed. Agents need an AI provider key and act with the role of the person who asked.
+icon: bot
+---
+
+The **assistant** is the default agent of a workspace. It opens in a panel beside the current page and does work through the same actions the studio uses. It needs an AI provider key, set once: see [Turn on agents](/quickstart#turn-on-agents).
+
+## Ask the assistant
+
+`⌘J` opens the assistant. Requests are written in plain words, for example "create a new invoice for Northwind for consultancy hours" or "how many deals are in the pipeline?". The assistant shows each step it takes, such as the records it found. Typing `@` mentions a record.
+
+## Approve what an agent changes
+
+Agents look things up freely and make everyday edits, such as creating or updating a record, without asking. A tool that does something bigger, such as deleting records, importing a file, sending a notification or changing the data model, stops and shows an **approval card**.
+
+1. Read the card. It says what the agent wants to do, with the values it plans to use.
+2. Choose **Approve** to let it go ahead, or **Reject** to stop it.
+
+The card stays in the conversation as a record of the decision. Which tools ask first is set per agent: see [Tools and approvals](/guides/agents/tools-and-approvals).
+
+## Manage agents and skills
+
+- **Agents** in the sidebar lists the agents of the workspace and the agents that modules brought. Create, edit and configure them as described in [Define an agent](/guides/agents/define-an-agent).
+- **Skills** in the sidebar lists skills, with when each one applies. Skills from a module show which module. See [Skills](/guides/agents/skills).
+
+An agent acts as the person who asked, with that person's role, and its tool list narrows that further.
+
+## Related
+
+- [Agents](/concepts/agents): how tools, approvals and permissions fit together.
+- [Tasks](/guides/studio/tasks): give a task to an agent.

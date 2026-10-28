@@ -1,0 +1,24 @@
+---
+title: devias plan
+description: "devias plan lists every change applying a manifest would make, each marked create, update, delete or conflict, without writing anything. Unchanged items are hidden unless --all is passed. Exits with code 2 when the plan has conflicts and 0 otherwise."
+icon: eye
+---
+
+`devias plan` shows what applying a manifest would change in a workspace, without changing anything.
+
+```bash
+devias plan -w <workspaceId> -m ./src/manifest/index.ts
+```
+
+The command lists every change, each marked `create`, `update`, `delete` or `conflict`. Unchanged items are hidden unless `--all` is passed.
+
+Nothing is written. The command is always safe to run.
+
+## Exit code
+
+The command exits with `2` when the plan has conflicts and with `0` otherwise. In CI this fails a pull request that would conflict with the workspace.
+
+## Related
+
+- [devias apply](/reference/cli/apply): apply the plan.
+- [Plan and apply](/guides/modules/plan-and-apply): the kinds of change.

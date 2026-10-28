@@ -1,0 +1,53 @@
+---
+title: SDK mock backend
+sidebarTitle: Mock backend
+description: "How to use createMockClient from @devias/sdk/mock, a complete in-memory Devias client with the same interface as the HTTP client. Lists its options (manifests, catalog, latency, persist, members, ai), reset, running the studio on it with VITE_MOCK=1, and testing."
+icon: flask-conical
+---
+
+The SDK includes a second client with the same methods that keeps everything in memory. It is not a stub: records, queries, workflows, tasks and live events all work.
+
+```ts
+import { createMockClient } from '@devias/sdk/mock';
+
+const client = createMockClient({
+  workspaceId: 'demo',
+  manifests: [manifest],
+});
+
+await client.records.create('person', { first_name: 'Ada' });
+```
+
+Both clients implement the same `DeviasClient` interface, so code written against one runs on the other.
+
+## Options
+
+| Option | What it does |
+| --- | --- |
+| `manifests` | Modules installed from the start. |
+| `catalog` | More modules that can be installed later. |
+| `latency` | A delay for every call, to see loading states. |
+| `persist` | Keep the data between page loads, under a key. |
+| `members` | The people notifications can go to. |
+| `ai` | Scripted agent answers, for testing chat. |
+
+Call `client.reset()` to go back to a clean workspace.
+
+## Run the studio on the mock
+
+To work on the studio with no server, run:
+
+```bash
+VITE_MOCK=1 pnpm dev:studio
+```
+
+## Use the mock in tests
+
+Create a fresh client in each test and assert on what is read back. Nothing is shared between clients, and there is nothing to start or stop.
+
+The mock does not serve files, so a module's logo is not available. A module that needs server code, such as a payment provider, can be put in `catalog` to appear in the list without running. The mock has no workflow runner for queued runs: a run it starts completes immediately.
+
+## Related
+
+- [Records and queries](/reference/sdk/records-and-queries): works the same on the mock.
+- [What a module is](/guides/modules/what-a-module-is): test a manifest against the mock.

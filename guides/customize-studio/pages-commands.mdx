@@ -1,0 +1,60 @@
+---
+title: Pages and commands
+description: "How a module adds full screens with definePageComponent, command palette entries with defineCommand, Settings sections with defineSettingsSection, and reads studio data with hooks such as useWorkspace, useSchema, useRecords and useRecord."
+icon: command
+---
+
+A module adds full screens, command palette entries and Settings sections to the studio, and its components read studio data through hooks.
+
+## Add a page with definePageComponent
+
+A **page** is a full screen. It has a `path` and a React component.
+
+```tsx
+function ReportPage() {
+  return (
+    <Page>
+      <PageHeader title="Report" />
+    </Page>
+  );
+}
+
+export const reportPage = definePageComponent({
+  id: ids.pages.report,
+  path: 'report',
+  component: ReportPage,
+})
+```
+
+The page appears at `/workspaces/<workspace>/report`. `$name` in the path is a parameter, such as `report/$stage`. A page that a nav item or a command points at also needs a `definePage` in the manifest with the same id, so that the sidebar can show its label and icon.
+
+## Add a command with defineCommand
+
+A **command** is an entry in the command palette (`⌘K`). It can have a group and a keyboard shortcut.
+
+```tsx
+defineCommand({
+  id: ids.commands.open_report,
+  label: 'Open report',
+  group: 'Navigate',
+  shortcut: 'g p',
+  run: (ctx) => ctx.navigate(`/workspaces/${ctx.workspaceId}/report`),
+})
+```
+
+The `ctx` passed to `run` can navigate, open a record, start creating a record, a document or a task, and close the palette. A `when` function hides a command that does not apply.
+
+Commands that come from search results, such as "records that match what was typed", are registered as a **command provider** instead.
+
+## Add a Settings section with defineSettingsSection
+
+A module can add a section to **Settings** with `defineSettingsSection`: a name, a label, an icon, a group and a component. It is for configuration that belongs to the module.
+
+## Hooks
+
+Components read the studio's data through hooks exported from `@devias/studio`, such as `useWorkspace`, `useSchema`, `useRecords`, `useRecord` and `useNavigateTo`. The hooks keep the studio's cache and live updates working.
+
+## Related
+
+- [Sidebar structure](/guides/customize-studio/structure): add a row that opens a page.
+- [Theming](/guides/customize-studio/theming): colours, fonts and corners.

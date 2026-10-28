@@ -1,0 +1,65 @@
+---
+title: Environment variables
+sidebarTitle: Environment
+description: "Reference for every environment variable the Devias server and studio build read: server address and secrets, database, Google sign-in, agent provider keys and limits (AI_PROVIDER, AI_MODEL, AI_EFFORT and more), and the VITE_ build variables. Each with its default."
+icon: settings
+---
+
+The server is configured with environment variables, set in a `.env` file in the project root or where the server is hosted. A variable that is not set has the default shown.
+
+## Server
+
+| Variable | Default | What it does |
+| --- | --- | --- |
+| `PORT` | `3000` | The port the server listens on. |
+| `BETTER_AUTH_URL` | `http://localhost:3000` | The server's public address. |
+| `STUDIO_ORIGIN` | `http://localhost:5173` | The studio's address. Only this origin may call the server. |
+| `BETTER_AUTH_SECRET` | a development secret | Signs sessions. **Set it in production.** |
+| `ENCRYPTION_KEY` | derived from the secret | Encrypts module credentials at rest. At least 16 characters. |
+| `LOG_LEVEL` | `info` | `debug`, `info`, `warn` or `error`. |
+
+## Database
+
+| Variable | Default | What it does |
+| --- | --- | --- |
+| `DATABASE_URL` | unset | A Postgres connection string. Unset means the embedded database. |
+| `PGLITE_DATA_DIR` | `./.data/pglite` | Where the embedded database keeps its files. |
+| `MIGRATE_ON_BOOT` | on for the embedded database, off for Postgres | Run pending migrations when the server starts. |
+
+## Sign in
+
+| Variable | What it does |
+| --- | --- |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Set both to show **Continue with Google**. Register `<BETTER_AUTH_URL>/api/auth/callback/google` as the OAuth client's redirect address. |
+
+## Agents
+
+Pick one provider and give it a key. Without a key, agents are switched off and everything else works.
+
+| Variable | Default | What it does |
+| --- | --- | --- |
+| `AI_PROVIDER` | `anthropic` | `anthropic`, `google` or `openai`. |
+| `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `OPENAI_API_KEY` | unset | The key for the provider you chose. |
+| `ANTHROPIC_BASE_URL`, `GEMINI_BASE_URL`, `OPENAI_BASE_URL` | unset | Point at a proxy or a compatible server. |
+| `AI_MODEL` | the provider's default | Which model to use. |
+| `AI_EFFORT` | `high` | How hard it thinks: `low`, `medium`, `high`, `xhigh` or `max`. |
+| `AI_MAX_TOKENS` | `16000` | The longest answer. |
+| `AI_MAX_ITERATIONS` | `12` | How many tool steps it may take for one request. |
+| `AI_REQUEST_TIMEOUT_MS` | `180000` | How long to wait for the model. |
+| `AI_FALLBACKS` | on | Anthropic only. Lets the provider fall back to another model when it refuses a request. |
+
+## Studio
+
+These are read when the studio is built.
+
+| Variable | What it does |
+| --- | --- |
+| `VITE_API_URL` | The server's address. Leave it unset to use the same origin. |
+| `VITE_MOCK=1` | Run on an in-memory fake backend, with no server. |
+
+The repository's `.env.example` lists these with comments.
+
+## Related
+
+- [Deploy](/operate/deploy): put the settings to use.
+- [Database](/operate/database): choose where data lives.

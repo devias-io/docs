@@ -1,0 +1,38 @@
+---
+title: Built-in modules
+description: The modules in the Devias repository under modules/. A table lists what each adds, which modules it needs, and what it is a good example of (smallest module, layouts and agents, custom screens, connections, webhooks and workflows, actions on another module's records).
+icon: layers
+---
+
+These modules live in the repository under `modules/`. They are installed from **Settings → Modules**. Each one is also a worked example of the parts described in [Build a module](/guides/modules/what-a-module-is).
+
+## Modules in the repository
+
+| Module | Adds | Needs | Good example of |
+| --- | --- | --- | --- |
+| CRM | People, companies and deals, with a pipeline board, record pages, a Sales agent and a skill for closing out a deal | None | All three parts (manifest, server, studio) and layouts, agents and skills. Most other modules build on it. |
+| Products | Products and their prices, one time or recurring | None | |
+| Quotes | Quotes for deals, with their items | CRM | |
+| Invoicing | Invoices, lines and payments for the people and companies in the CRM, with actions to recalculate an invoice and add a payment | CRM | Actions that other modules call |
+| Expenses | What the business spends, by category, supplier and deal, from approval to reimbursement | CRM | The smallest module: a manifest and nothing else |
+| Inventory | Stock across locations, as moves in and out | CRM, Products | |
+| Payments via Stripe | Customers pay invoices online through a Stripe payment link, and the payment is recorded on the invoice | Invoicing | A connection, actions, events, a webhook and a workflow |
+| Email via Resend | Sends email from workflows and reacts to deliveries, bounces and opens | None | An API-key connection, one action and delivery events |
+| Enrichment via Context.dev | Fills in what a CRM person is missing (job title, city, country, LinkedIn, X, GitHub, website and company) from Context.dev. It never overwrites what is there, and each match costs 20 Context.dev credits. | CRM | An action on another module's records, and workflows that start switched off |
+
+The Context.dev module can be run from a person's Actions menu, or through its workflow that looks up every new person.
+
+## Where to read each part
+
+| To learn | Read |
+| --- | --- |
+| The smallest module | `modules/expenses` |
+| Layouts, agents and skills | `modules/crm/src/manifest` |
+| Custom screens | `modules/crm/src/studio` |
+| A connection, a webhook and a workflow | `modules/payment-stripe` |
+| An action on another module's records, and workflows that start switched off | `modules/enrichment-context-dev` |
+
+## Related
+
+- [Create a first module](/guides/modules/first-module): build one.
+- [Install and connect modules](/guides/studio/modules): add these to a workspace.

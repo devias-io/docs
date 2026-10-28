@@ -1,0 +1,42 @@
+---
+title: Install and connect modules
+sidebarTitle: Modules
+description: How to manage modules under Settings → Modules. Covers installing a module from a reviewed plan, updating and uninstalling, workspace and personal connections to outside services, and the Events and Workflows tabs of a module that receives events.
+icon: puzzle
+---
+
+Modules add whole areas to a workspace. They are managed under **Settings → Modules**. A module's page says what it adds, and has tabs for installing, connections, events and workflows where they apply.
+
+## Install a module
+
+1. Open **Settings → Modules** and choose a module from the list.
+2. Open the **Install** tab. It lists exactly what would be created, and anything the module says needs review. Nothing is written yet.
+3. Press **Install** and confirm. The module's objects, views and pages appear in the sidebar.
+
+## Update or remove a module
+
+- When a newer version exists, the module's page offers **Review changes**, which shows what would change before it is applied.
+- **Uninstall** removes everything the module owns and never touches what people created themselves.
+- Core parts of the studio cannot be uninstalled.
+
+## Connect a module to an outside service
+
+A module that needs a connection has a **Connections** tab. Some modules talk to services such as Stripe or Resend.
+
+| Kind | Belongs to | Set up by |
+| --- | --- | --- |
+| Workspace connection | Everyone in the workspace, such as a Stripe API key | An admin |
+| Personal connection | One person, such as their own Google account | Each person, under **Settings → Integrations** |
+
+Secrets such as API keys are stored encrypted and afterwards shown only as a masked hint.
+
+## Events and workflows of a module
+
+- If a module receives events from a service, its **Events** tab shows the address to give that service and the events received so far.
+- A module can ship workflows that react to those events. They are on the module's **Workflows** tab with how each one last went, and in the Workflows list marked with the module's name. They can be switched on or off. To change one, make a copy. See [Workflows in the studio](/guides/studio/workflows#workflows-that-ship-with-a-module).
+
+## Related
+
+- [Modules](/concepts/modules): what a module is and how ids keep modules apart.
+- [What a module is](/guides/modules/what-a-module-is): build one.
+- [Connections and events in a module](/guides/modules/connections-and-events): declare them.

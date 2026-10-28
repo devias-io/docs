@@ -1,0 +1,64 @@
+---
+title: Quickstart
+description: "Procedure to run Devias on one machine with Node.js 22, pnpm 10 and the embedded database. Starts the API on port 3000 and the studio on 5173, creates a workspace, installs the CRM module from a reviewed plan and turns on agents. Each step states its expected result."
+icon: rocket
+---
+
+This procedure runs the Devias server and studio on one machine. It needs [Node.js](https://nodejs.org) 22 or newer and [pnpm](https://pnpm.io) 10 or newer. No database setup is needed: until `DATABASE_URL` points at Postgres, Devias stores everything in an embedded database.
+
+## Run Devias locally
+
+1. **Get the code.**
+
+   ```bash
+   git clone https://github.com/devias-io/devias.git
+   cd devias
+   pnpm install
+   ```
+
+2. **Start it.**
+
+   ```bash
+   pnpm dev
+   ```
+
+   Expected result: the API listens on `http://localhost:3000` and the studio on `http://localhost:5173`. Verify the API:
+
+   ```bash
+   curl http://localhost:3000/api/health
+   ```
+
+   The response is JSON with `"ok": true`.
+
+3. **Create a workspace.**
+
+   Open `http://localhost:5173`, sign up, and create a workspace. A workspace is the space for one company: its data, people and modules. Its slug is the part of the address after `/workspaces/`.
+
+   Expected result: a new workspace contains only the studio's own pages: Home, Tasks, Documents, Workflows, Agents and Skills.
+
+4. **Install the CRM module.**
+
+   Open **Settings → Modules** and choose **CRM**. The **Install** tab shows the plan: every object, field and view the module would add. Nothing is written until **Install** is pressed and confirmed.
+
+   Expected result: People, Companies and Deals appear in the sidebar. Other modules install the same way.
+
+5. **Check that it works.**
+
+   Press `⌘K` and choose **New person**, or open **Deals** to see the pipeline as a board.
+
+## Turn on agents
+
+Agents need a key from an AI provider. Add one to a `.env` file in the project root and restart the server:
+
+```bash
+ANTHROPIC_API_KEY=your-key
+```
+
+`⌘J` then opens the assistant. To use Google or OpenAI instead, set `AI_PROVIDER` (`google` or `openai`) and the matching key. Without a key everything else works, and the studio shows agents as not configured. Every variable is listed in [Environment variables](/operate/environment).
+
+## Related
+
+- [Architecture](/concepts/architecture): studio, server and modules.
+- [Navigate the studio](/guides/studio/navigate-the-studio): regions, shortcuts and Home.
+- [What a module is](/guides/modules/what-a-module-is): build a module.
+- [Deploy](/operate/deploy): Postgres and a real deployment.

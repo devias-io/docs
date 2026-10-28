@@ -1,0 +1,54 @@
+---
+title: Tools and approvals
+description: How an agent's tools and approval modes work. Lists the thirteen areas of tools, the two modes (Runs freely and Ask first), which tools ask first by default, which sensitive tools are locked to always ask, and how the approval card behaves.
+icon: shield-check
+---
+
+A **tool** is one thing an agent may do, such as "list records" or "create a task". Almost every tool is an **action** that Devias already has, so an agent and the studio cannot disagree about what is allowed. Each tool of each agent is set to run freely or to ask first.
+
+## Areas of tools
+
+| Area | Covers |
+| --- | --- |
+| Records | Finding, reading, creating and updating records |
+| Data model | Objects and fields |
+| Workflows | Listing, creating and running workflows |
+| Documents | Writing and reading documents |
+| Tasks | Creating and working on tasks |
+| Modules | Installing and connecting modules |
+| Module actions | Actions that modules add, called by their name |
+| People and access | Members and API keys |
+| Notifications | Sending and reading notifications |
+| Agents and AI | Agents and their settings |
+| Skills | Reading and writing skills |
+| Open things | Navigating the studio for the person |
+| Asking the person | Questions back to the person |
+
+## Modes: runs freely or ask first
+
+| Mode | Behaviour |
+| --- | --- |
+| Runs freely | The tool runs as soon as the agent calls it. |
+| Ask first | The call waits on an approval card until the person approves or rejects it. |
+
+Each tool has a default mode.
+
+- Reading runs freely, and so do everyday edits such as creating or updating a record, a task or a document.
+- Deleting, importing in bulk, sending a notification, changing the data model, installing a module and running a workflow ask first.
+- A module's own actions ask first, unless the module's author marked them safe.
+
+A tool's mode can be changed per agent in the agent's settings, on its **Tools** tab. A few sensitive tools are **locked** to always ask, whatever the agent's settings say: managing members and API keys, changing agents, skills and workflows, deleting a field, and uninstalling a module.
+
+<Warning>
+  Set Runs freely only on tools whose mistakes are cheap. A tool that deletes, sends or pays should almost always ask first.
+</Warning>
+
+## Approval card
+
+When a call waits, the card says what the agent wants to do and with which values. **Approve** lets it run. **Reject** tells the agent no, and the agent continues without that call. The decision stays in the conversation.
+
+## Related
+
+- [Define an agent](/guides/agents/define-an-agent): give an agent its tools.
+- [Access and permissions](/concepts/access): what an agent can reach, by role.
+- [Agents](/concepts/agents): the concept.

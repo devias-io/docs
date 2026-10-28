@@ -1,0 +1,53 @@
+---
+title: Plan and apply
+description: "How installing or updating a module works in two steps. A plan marks each item create, update, delete or conflict, and destructive changes need explicit permission. Covers the studio flow, the devias plan and apply commands with their flags and exit codes, and the API key permission needed."
+icon: git-compare
+---
+
+Installing or updating a module is always two steps: a **plan**, then an **apply**. The plan lists every change before anything is written.
+
+## What a plan says
+
+Devias compares the manifest with what the workspace already has and marks each item as one of:
+
+| Mark | Meaning |
+| --- | --- |
+| `create` | New, and added. |
+| `update` | It exists and something changed. |
+| `delete` | It is gone from the manifest, so it would be removed. |
+| `conflict` | Something with that name already exists and is not the module's. |
+
+Changes that delete data are **destructive**. Apply refuses them unless explicitly allowed.
+
+## Plan and apply in the studio
+
+In **Settings → Modules**, open the module and its **Install** or **Changes** tab, and apply the plan there. In development, the studio applies plans that have no destructive changes and no conflicts by itself on start-up, and asks about the rest.
+
+## Plan and apply from the command line
+
+The `devias` command does the same against a running server. It needs the workspace id, a manifest file and an API key.
+
+```bash
+devias plan  -w <workspaceId> -m ./src/manifest/index.ts -k $DEVIAS_API_KEY
+devias apply -w <workspaceId> -m ./src/manifest/index.ts -k $DEVIAS_API_KEY
+```
+
+| Command | What it does |
+| --- | --- |
+| `devias id [count]` | Prints new uuids for your manifest. |
+| `devias plan` | Shows what apply would change. Exits with 2 if there are conflicts. |
+| `devias apply` | Applies the manifest. Add `--allow-destructive` to allow deletions, and `-y` to skip the question. |
+| `devias dev` | Watches the manifest and re-applies changes that aren't destructive. |
+| `devias uninstall` | Removes everything the module owns. |
+
+A different server is set with `-u` or `DEVIAS_URL` (default `http://localhost:3000`).
+
+<Warning>
+  Plan and apply need an API key that may manage modules. A key made in **Settings → API keys** can only read records, so create the key through the API with `permissions: { "module": ["manage"] }`.
+</Warning>
+
+## Related
+
+- [CLI reference](/reference/cli/overview): every command and option.
+- [Publish a module](/guides/modules/publishing): version, logo and release.
+- [Install and connect modules](/guides/studio/modules): the same flow from the studio.

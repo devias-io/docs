@@ -1,0 +1,29 @@
+---
+title: HTTP API
+sidebarTitle: Overview
+description: "How the Devias HTTP API behaves. JSON requests and responses, routes under /api/workspaces/<workspaceId>/, one permission check for every caller, every write announced as an event, and the OpenAPI document at /reference/api/openapi.json that describes all routes including module routes."
+icon: terminal
+---
+
+Everything the studio does goes through the Devias HTTP API, and anything the studio can do can be done through it. The [TypeScript SDK](/reference/sdk/client) wraps it. This section describes the API for any other language and for what the SDK does underneath.
+
+## Properties of the API
+
+- **JSON in, JSON out.** Requests and responses are JSON.
+- **Workspace scoped.** Almost every route lives under `/api/workspaces/<workspaceId>/`, so one server holds many workspaces.
+- **One permission check.** An API call, the studio, a workflow and an agent all pass the same check. See [Access and permissions](/concepts/access).
+- **Changes are announced.** Every write is also an event that can be followed. See [Change feed](/reference/api/change-feed).
+
+## The OpenAPI document
+
+Every route, with its request and response schemas, is described in one OpenAPI 3.1 document: [`/reference/api/openapi.json`](/reference/api/openapi.json) on this site. It includes the routes added by the modules of the reference setup. The core API alone is `apps/server/openapi.json` in the repository, and the SDK's types are generated from that file, so the two never disagree.
+
+There are no per-route pages in this documentation. The OpenAPI document is the complete and exact list of routes.
+
+## Related
+
+- [Authentication](/reference/api/authentication): a session or an API key.
+- [Errors](/reference/api/errors): what a failed call returns.
+- [Querying records](/reference/api/querying): the query format.
+- [Change feed](/reference/api/change-feed): follow changes as they happen.
+- [Module routes](/reference/api/module-routes): actions, webhooks and a module's own routes.
